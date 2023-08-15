@@ -6,20 +6,27 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/06/21 13:39:59 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/08/15 18:09:34 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
+
 typedef struct philo
 {
-	int		num;
-	char	*state;
-	char	*mem_state;
-	int		last_eat;
-}	t_philo;
+	int			num;
+	char		*state;
+	char		*mem_state;
+	int			last_eat;
+	pthread_t	thread;
+}			t_philo;
 
 typedef struct simu
 {
@@ -29,18 +36,12 @@ typedef struct simu
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		end_if;
-}	t_simu;
+}			t_simu;
 
-# include <unistd.h>
-# include <sys/time.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <pthread.h>
+int			ft_atoi(char *nptr);
 
-int		ft_atoi(char *nptr);
+void		init(t_simu *simu, int ac, char **av);
 
-void	init(t_simu *simu, int ac, char **av);
-
-void	print_state(t_simu simu);
+void		print_state(t_simu simu);
 
 #endif
