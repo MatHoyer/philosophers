@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/08/15 18:15:37 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/08/26 19:45:34 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	init_philo(t_philo *philo, int i)
 
 void	init_simu(t_simu *simu, int ac, char **av)
 {
+	gettimeofday(&simu->time_start, NULL);
 	simu->number_of_philosophers = ft_atoi(av[1]);
 	if (!simu->number_of_philosophers)
 		exit(printf("Error : Nombre de philosophes invalide (%s).\n", av[1]));

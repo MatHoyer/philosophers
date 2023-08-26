@@ -10,6 +10,7 @@ SRC = ft_atoi.c \
 	init.c \
 	main.c \
 	print_state.c \
+	time.c
 
 OBJS = $(SRC:.c=.o)
 
