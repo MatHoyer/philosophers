@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:58:27 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/08/26 19:54:08 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/08/26 21:49:42 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,37 +30,52 @@ int	print_not_enought_arg_error(int ac)
 
 void *fonctionDuThread(void *arg) {
     t_philo *philo = (t_philo *) arg;
+	int	i = 0;
 
-	printf("%ldms %d %s\n", get_pgrm_time(philo->time_start), philo->num, philo->state);
+	while (!philo->simu->stop)
+	{
+		print_state(philo);
+		i++;
+		if (i % 100000000 == 0)
+		{
+			if (philo->state != STATE_SLEEPING)
+				philo->state++;
+			else
+				philo->state = 2;
+			if (philo->num == 2 && i == 1000000000)
+				philo->state = STATE_DIED;
+		}
+	}
     return NULL;
 }
 
-void	test_thread(t_simu *simu)
+void	test_thread(t_philo *philo)
 {
 	int	i;
 
 	i = 0;
-	while (++i <= simu->number_of_philosophers)
+	while (++i <= philo[0].simu->number_of_philosophers)
 	{
-		if (pthread_create(&simu->philo[i].thread, NULL, fonctionDuThread, &simu->philo[i]) != 0)
+		if (pthread_create(&philo[i].thread, NULL, fonctionDuThread, &philo[i]) != 0)
 			exit(1);
-		simu->philo[i].time_start = simu->time_start;
     }
 	i = 0;
-	while (++i <= simu->number_of_philosophers)
+	while (++i <= philo[0].simu->number_of_philosophers)
 	{
-		if (pthread_join(simu->philo[i].thread, NULL) != 0)
+		if (pthread_join(philo[i].thread, NULL) != 0)
 			exit(1);
 	}
 }
 
 int	main(int ac, char **av)
 {
-	t_simu	simu;
+	t_philo	*philo;
+	t_simu	simu_main;
 
 	if (ac < 5 || ac > 6)
 		exit(print_not_enought_arg_error(ac));
-	init(&simu, ac, av);
-	test_thread(&simu);
+	philo = NULL;
+	philo = init(philo, &simu_main, ac, av);
+	test_thread(philo);
 	return (0);
 }
