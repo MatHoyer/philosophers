@@ -1,15 +1,17 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I. -MMD -g3
+CFLAGS = -Wall -Wextra -Werror -I. -MMD
 
 SRC_PATH = sources/
 
 OBJS_PATH = obj/
 
-SRC = ft_atoi.c \
+SRC = error.c \
+	ft_atoi.c \
 	init.c \
 	main.c \
 	print_state.c \
+	thread.c \
 	time.c
 
 OBJS = $(SRC:.c=.o)

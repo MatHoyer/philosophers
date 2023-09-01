@@ -1,52 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   thread.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/21 12:35:56 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/01 09:26:03 by mhoyer           ###   ########.fr       */
+/*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
+/*   Updated: 2023/09/01 10:09:37 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_isdigit(char c)
+void	*ft_thread(void *arg)
 {
-	return (c >= '0' && c <= '9');
+	t_philo	*philo;
+	int		i;
+
+	philo = (t_philo *)arg;
+	i = 0;
+	while (!philo->simu->stop)
+	{
+		print_state(philo);
+		i++;
+	}
+	return (NULL);
 }
 
-int	check_nb(char *str)
+void	create_thread(t_philo *philo)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (++i <= philo[0].simu->number_of_philosophers)
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
+		if (pthread_create(&philo[i].thread, NULL, ft_thread, &philo[i]) != 0)
+			exit(1);
 	}
-	return (1);
-}
-
-int	ft_atoi(char *nptr)
-{
-	long nb;
-	int i;
-
-	nb = 0;
 	i = 0;
-	while (ft_isdigit(nptr[i]))
+	while (++i <= philo[0].simu->number_of_philosophers)
 	{
-		nb *= 10;
-		nb += nptr[i] - '0';
-		i++;
+		if (pthread_join(philo[i].thread, NULL) != 0)
+			exit(1);
 	}
-	if (nb > 2147483647 || nb < -2147483648)
-		exit(printf("Error : Bad input (%s).\n", nptr));
-	if (nptr[i] == '\0')
-		return ((int)nb);
-	return (-1);
 }

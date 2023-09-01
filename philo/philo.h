@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/08/26 21:46:02 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/01 09:58:35 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ typedef enum e_state
 	STATE_FORK,
 	STATE_EATING,
 	STATE_SLEEPING,
-}		t_state;
+}					t_state;
 
-
-typedef enum {
-    false,
-    true
-} t_bool;
+typedef enum
+{
+	false,
+	true
+}					t_bool;
 
 typedef struct s_simu
 {
@@ -44,25 +44,35 @@ typedef struct s_simu
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				end_if;
-}			t_simu;
+}					t_simu;
+
+typedef struct s_fork
+{
+	t_bool	is_up;
+}	t_fork;
 
 typedef struct s_philo
 {
 	int				num;
 	t_state			state;
 	t_state			mem_state;
-	int				last_eat;
+	t_fork			his_fork;
+	t_fork			*neighbour_fork;
+	unsigned long	last_eat;
 	pthread_t		thread;
 	t_simu			*simu;
-}			t_philo;
+}					t_philo;
 
-int				ft_atoi(char *nptr);
+int					ft_atoi(char *nptr);
 
-t_philo			*init(t_philo *philo, t_simu *simu_main, int ac, char **av);
+t_philo				*init(t_philo *philo, t_simu *simu_main, int ac, char **av);
 
-int				cmp_state(char *state, char *test_state);
-t_philo			*print_state(t_philo *philo);
+int					cmp_state(char *state, char *test_state);
+t_philo				*print_state(t_philo *philo);
+unsigned long		get_pgrm_time(struct timeval start);
+void				*ft_thread(void *arg);
+void				create_thread(t_philo *philo);
 
-unsigned long	get_pgrm_time(struct timeval start);
+int					print_not_enought_arg_error(int ac);
 
 #endif
