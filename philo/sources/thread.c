@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/01 10:09:37 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/01 10:25:40 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,28 @@ void	*ft_thread(void *arg)
 	while (!philo->simu->stop)
 	{
 		print_state(philo);
-		i++;
+		if (philo->state == STATE_THINKING && philo->neighbour_fork->is_up
+			&& philo->his_fork.is_up)
+		{
+			philo->state = STATE_EATING;
+			philo->his_fork.is_up = false;
+			philo->neighbour_fork->is_up = false;
+			philo->last_eat = get_pgrm_time(philo->simu->time_start);
+		}
+		if (philo->state == STATE_EATING
+			&& get_pgrm_time(philo->simu->time_start)
+			- philo->last_eat >= (unsigned long)philo->simu->time_to_eat)
+		{
+			philo->his_fork.is_up = true;
+			philo->neighbour_fork->is_up = true;
+			philo->state = STATE_THINKING;
+			philo->last_eat = get_pgrm_time(philo->simu->time_start);
+		}
+		if (get_pgrm_time(philo->simu->time_start) - philo->last_eat >= (unsigned long)philo->simu->time_to_die)
+		{
+			philo->state = STATE_DIED;
+		}
+			i++;
 	}
 	return (NULL);
 }
