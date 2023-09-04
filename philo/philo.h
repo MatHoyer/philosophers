@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/01 09:58:35 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/04 11:23:18 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,20 @@ typedef struct s_simu
 
 typedef struct s_fork
 {
-	t_bool	is_up;
+	t_bool			is_up;
+	pthread_mutex_t	mutex;
 }	t_fork;
 
 typedef struct s_philo
 {
 	int				num;
+	int				nb_eat;
 	t_state			state;
 	t_state			mem_state;
 	t_fork			his_fork;
 	t_fork			*neighbour_fork;
 	unsigned long	last_eat;
+	pthread_mutex_t	mutex_print;
 	pthread_t		thread;
 	t_simu			*simu;
 }					t_philo;

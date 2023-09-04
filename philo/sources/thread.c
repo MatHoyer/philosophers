@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/01 10:25:40 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/04 11:30:37 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,29 @@
 void	*ft_thread(void *arg)
 {
 	t_philo	*philo;
-	int		i;
 
 	philo = (t_philo *)arg;
-	i = 0;
 	while (!philo->simu->stop)
 	{
+		pthread_mutex_lock(&philo->mutex_print);
 		print_state(philo);
-		if (philo->state == STATE_THINKING && philo->neighbour_fork->is_up
-			&& philo->his_fork.is_up)
+		pthread_mutex_unlock(&philo->mutex_print);
+		if (philo->nb_eat == philo->simu->end_if)
 		{
-			philo->state = STATE_EATING;
+			philo->simu->stop = true;
+		}
+		if (philo->state == STATE_THINKING /*&& philo->neighbour_fork->is_up
+			&& philo->his_fork.is_up*/)
+		{
+			pthread_mutex_lock(&philo->his_fork.mutex);
+			pthread_mutex_lock(&philo->neighbour_fork->mutex);
 			philo->his_fork.is_up = false;
 			philo->neighbour_fork->is_up = false;
+			philo->state = STATE_FORK;
+			pthread_mutex_lock(&philo->mutex_print);
+			print_state(philo);
+			pthread_mutex_unlock(&philo->mutex_print);
+			philo->state = STATE_EATING;
 			philo->last_eat = get_pgrm_time(philo->simu->time_start);
 		}
 		if (philo->state == STATE_EATING
@@ -36,6 +46,9 @@ void	*ft_thread(void *arg)
 		{
 			philo->his_fork.is_up = true;
 			philo->neighbour_fork->is_up = true;
+			pthread_mutex_unlock(&philo->his_fork.mutex);
+			pthread_mutex_unlock(&philo->neighbour_fork->mutex);
+			philo->nb_eat ++;
 			philo->state = STATE_THINKING;
 			philo->last_eat = get_pgrm_time(philo->simu->time_start);
 		}
@@ -43,7 +56,6 @@ void	*ft_thread(void *arg)
 		{
 			philo->state = STATE_DIED;
 		}
-			i++;
 	}
 	return (NULL);
 }
@@ -61,6 +73,7 @@ void	create_thread(t_philo *philo)
 	i = 0;
 	while (++i <= philo[0].simu->number_of_philosophers)
 	{
+		pthread_mutex_destroy(&philo[i].his_fork.mutex);
 		if (pthread_join(philo[i].thread, NULL) != 0)
 			exit(1);
 	}
