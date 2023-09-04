@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/04 11:23:18 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/04 16:16:57 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef enum
 
 typedef struct s_simu
 {
+	pthread_mutex_t	mutex_print;
+	pthread_mutex_t	mutex_access;
 	struct timeval	time_start;
 	t_bool			stop;
 	int				number_of_philosophers;
@@ -48,7 +50,6 @@ typedef struct s_simu
 
 typedef struct s_fork
 {
-	t_bool			is_up;
 	pthread_mutex_t	mutex;
 }	t_fork;
 
@@ -61,7 +62,6 @@ typedef struct s_philo
 	t_fork			his_fork;
 	t_fork			*neighbour_fork;
 	unsigned long	last_eat;
-	pthread_mutex_t	mutex_print;
 	pthread_t		thread;
 	t_simu			*simu;
 }					t_philo;

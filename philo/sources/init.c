@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/04 11:27:28 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/04 16:17:26 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,15 @@ void	init_philo(t_philo *philo, t_simu *simu_main, int i)
 	philo->nb_eat = 0;
 	philo->last_eat = 0;
 	pthread_mutex_init(&philo->his_fork.mutex, NULL);
-	pthread_mutex_init(&philo->mutex_print, NULL);
 	if (philo->num == 0)
 	{
 		philo->state = STATE_VIDE;
 		philo->mem_state = STATE_VIDE;
-		philo->his_fork.is_up = false;
 		philo->simu = simu_main;
 		return ;
 	}
 	philo->state = STATE_THINKING;
 	philo->mem_state = STATE_THINKING;
-	philo->his_fork.is_up = true;
 	philo->simu = simu_main;
 }
 
@@ -37,7 +34,10 @@ void	init_simu(t_simu *simu, int ac, char **av)
 {
 	gettimeofday(&simu->time_start, NULL);
 	simu->stop = false;
+	pthread_mutex_init(&simu->mutex_print, NULL);
+	pthread_mutex_init(&simu->mutex_access, NULL);
 	simu->number_of_philosophers = ft_atoi(av[1]);
+	simu->end_if = -1;
 	if (simu->number_of_philosophers <= 0)
 		exit(printf("Error : Nombre de philosophes invalide (%s).\n", av[1]));
 	simu->time_to_die = ft_atoi(av[2]);
