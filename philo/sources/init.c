@@ -6,13 +6,13 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/04 16:17:26 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/06 12:45:37 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_philo(t_philo *philo, t_simu *simu_main, int i)
+void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 {
 	philo->num = i;
 	philo->nb_eat = 0;
@@ -28,14 +28,20 @@ void	init_philo(t_philo *philo, t_simu *simu_main, int i)
 	philo->state = STATE_THINKING;
 	philo->mem_state = STATE_THINKING;
 	philo->simu = simu_main;
+	philo->perm = perm_main;
+}
+
+void	init_perm(t_perm *perm)
+{
+	perm->stop = false;
+	pthread_mutex_init(&perm->mutex_access, NULL);
+	pthread_mutex_init(&perm->mutex_print, NULL);
+
 }
 
 void	init_simu(t_simu *simu, int ac, char **av)
 {
 	gettimeofday(&simu->time_start, NULL);
-	simu->stop = false;
-	pthread_mutex_init(&simu->mutex_print, NULL);
-	pthread_mutex_init(&simu->mutex_access, NULL);
 	simu->number_of_philosophers = ft_atoi(av[1]);
 	simu->end_if = -1;
 	if (simu->number_of_philosophers <= 0)
@@ -57,21 +63,23 @@ void	init_simu(t_simu *simu, int ac, char **av)
 	}
 }
 
-t_philo	*init(t_philo *philo, t_simu *simu_main, int ac, char **av)
+t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 {
-	int	i;
+	t_simu	simu_main;
+	int		i;
 
 	i = -1;
-	init_simu(simu_main, ac, av);
-	philo = malloc(sizeof(t_philo) * (simu_main->number_of_philosophers + 1));
+	init_perm(perm_main);
+	init_simu(&simu_main, ac, av);
+	philo = malloc(sizeof(t_philo) * (simu_main.number_of_philosophers + 1));
 	if (!philo)
 		exit(printf("Error : Mauvaise allocation des philosophes.\n"));
-	while (++i <= simu_main->number_of_philosophers)
+	while (++i <= simu_main.number_of_philosophers)
 	{
-		init_philo(&philo[i], simu_main, i);
+		init_philo(&philo[i], simu_main, perm_main, i);
 		if (i != 1)
 			philo[i].neighbour_fork = &philo[i - 1].his_fork;
-		if (i == simu_main->number_of_philosophers && i != 1)
+		if (i == simu_main.number_of_philosophers && i != 1)
 			philo[1].neighbour_fork = &philo[i].his_fork;
 		else if (i == 1)
 			philo[1].neighbour_fork = &philo[0].his_fork;

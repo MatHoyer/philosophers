@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/04 16:16:57 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/06 12:39:50 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,19 @@ typedef enum e_state
 typedef enum
 {
 	false,
-	true
+	true,
 }					t_bool;
+
+typedef struct s_perm
+{
+	pthread_mutex_t	mutex_access;
+	pthread_mutex_t	mutex_print;
+	t_bool			stop;
+}					t_perm;
 
 typedef struct s_simu
 {
-	pthread_mutex_t	mutex_print;
-	pthread_mutex_t	mutex_access;
 	struct timeval	time_start;
-	t_bool			stop;
 	int				number_of_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
@@ -51,7 +55,7 @@ typedef struct s_simu
 typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
-}	t_fork;
+}					t_fork;
 
 typedef struct s_philo
 {
@@ -63,12 +67,13 @@ typedef struct s_philo
 	t_fork			*neighbour_fork;
 	unsigned long	last_eat;
 	pthread_t		thread;
-	t_simu			*simu;
+	t_simu			simu;
+	t_perm			*perm;
 }					t_philo;
 
 int					ft_atoi(char *nptr);
 
-t_philo				*init(t_philo *philo, t_simu *simu_main, int ac, char **av);
+t_philo				*init(t_philo *philo, t_perm *perm_main, int ac, char **av);
 
 int					cmp_state(char *state, char *test_state);
 t_philo				*print_state(t_philo *philo);

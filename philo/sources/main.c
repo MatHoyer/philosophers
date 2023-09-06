@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:58:27 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/04 15:44:49 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/06 12:47:58 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 int	main(int ac, char **av)
 {
 	t_philo	*philo;
-	t_simu	simu_main;
+	t_perm	perm_main;
 
 	if (ac < 5 || ac > 6)
 		exit(print_not_enought_arg_error(ac));
 	philo = NULL;
-	philo = init(philo, &simu_main, ac, av);
+	philo = init(philo, &perm_main, ac, av);
 	create_thread(philo);
-	pthread_mutex_destroy(&simu_main.mutex_print);
-	pthread_mutex_destroy(&simu_main.mutex_access);
+	pthread_mutex_destroy(&perm_main.mutex_print);
+	pthread_mutex_destroy(&perm_main.mutex_access);
 	return (0);
 }
