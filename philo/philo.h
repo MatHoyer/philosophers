@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/06 12:39:50 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/07 12:50:29 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef enum e_state
 	STATE_SLEEPING,
 }					t_state;
 
-typedef enum
+typedef enum e_bool
 {
 	false,
 	true,
@@ -66,6 +66,7 @@ typedef struct s_philo
 	t_fork			his_fork;
 	t_fork			*neighbour_fork;
 	unsigned long	last_eat;
+	unsigned long	start_eat;
 	pthread_t		thread;
 	t_simu			simu;
 	t_perm			*perm;

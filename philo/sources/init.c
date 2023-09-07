@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/06 12:45:37 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/07 11:36:53 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 	philo->num = i;
 	philo->nb_eat = 0;
 	philo->last_eat = 0;
+	philo->start_eat = 0;
 	pthread_mutex_init(&philo->his_fork.mutex, NULL);
 	if (philo->num == 0)
 	{
 		philo->state = STATE_VIDE;
 		philo->mem_state = STATE_VIDE;
 		philo->simu = simu_main;
+		philo->perm = perm_main;
 		return ;
 	}
 	philo->state = STATE_THINKING;

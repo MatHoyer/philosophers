@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:29:35 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/06 12:42:03 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/07 11:34:23 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,6 @@ int	check_state(t_philo **philo)
 	if ((*philo)->state != (*philo)->mem_state)
 	{
 		(*philo)->mem_state = (*philo)->state;
-		if ((*philo)->state == STATE_DIED)
-		{
-			pthread_mutex_lock(&(*philo)->perm->mutex_access);
-			(*philo)->perm->stop = true;
-			pthread_mutex_unlock(&(*philo)->perm->mutex_access);
-		}
 		return (1);
 	}
 	return (0);
