@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/07 13:48:54 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/11 12:12:29 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ int	check_for_eating(t_philo *philo)
 {
 	if (philo->state == STATE_THINKING)
 	{
+		if (philo->num % 2 == 0 && get_pgrm_time(philo->simu.time_start) < (unsigned long)philo->simu.time_to_eat)
+		{
+			usleep(philo->simu.time_to_eat);
+		}
 		pthread_mutex_lock(&philo->his_fork.mutex);
 		pthread_mutex_lock(&philo->neighbour_fork->mutex);
 		philo->state = STATE_FORK;
@@ -97,8 +101,16 @@ void	*ft_thread(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->num % 2 == 0)
-		usleep(philo->simu.time_to_eat - 10);
+	if (philo->simu.number_of_philosophers % 2 != 0)
+	{
+		if (philo->num % 2 == 0)
+			usleep(philo->simu.time_to_eat);
+	}
+	else
+	{
+		if (philo->num % 2 != 0)
+			usleep(philo->simu.time_to_eat);
+	}
 	while (1)
 	{
 		check_for_die(philo);
@@ -113,9 +125,11 @@ void	*ft_thread(void *arg)
 			check_end_if(philo);
 		}
 		else
+		{
+			pthread_mutex_unlock(&philo->perm->mutex_access);
 			break ;
+		}
 	}
-	printf("TUP");
 	return (NULL);
 }
 
@@ -132,12 +146,6 @@ void	create_thread(t_philo *philo)
 	i = 0;
 	while (++i <= philo[0].simu.number_of_philosophers)
 	{
-		if (pthread_mutex_lock(&philo[i].perm->mutex_access) == 0 && philo[i].state == STATE_EATING)
-		{
-			pthread_mutex_unlock(&philo[i].perm->mutex_access);
-			pthread_mutex_unlock(&philo[i].his_fork.mutex);
-			pthread_mutex_unlock(&philo[i].neighbour_fork->mutex);
-		}
 		pthread_mutex_lock(&philo[i].his_fork.mutex);
 		pthread_mutex_unlock(&philo[i].his_fork.mutex);
 		pthread_mutex_destroy(&philo[i].his_fork.mutex);
