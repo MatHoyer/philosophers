@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/07 12:50:29 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/14 11:43:40 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,17 @@ typedef enum e_bool
 	true,
 }					t_bool;
 
+typedef enum e_test
+{
+	TEST_CMP,
+	TEST_MOD,
+}					t_test;
+
 typedef struct s_perm
 {
 	pthread_mutex_t	mutex_access;
 	pthread_mutex_t	mutex_print;
+	pthread_mutex_t	mutex_time;
 	t_bool			stop;
 }					t_perm;
 

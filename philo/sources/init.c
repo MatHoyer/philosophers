@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/07 11:36:53 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/14 10:13:04 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 		return ;
 	}
 	philo->state = STATE_THINKING;
-	philo->mem_state = STATE_THINKING;
+	philo->mem_state = STATE_VIDE;
 	philo->simu = simu_main;
 	philo->perm = perm_main;
 }
@@ -38,6 +38,7 @@ void	init_perm(t_perm *perm)
 	perm->stop = false;
 	pthread_mutex_init(&perm->mutex_access, NULL);
 	pthread_mutex_init(&perm->mutex_print, NULL);
+	pthread_mutex_init(&perm->mutex_time, NULL);
 
 }
 

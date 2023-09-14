@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:29:35 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/11 11:33:17 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/14 09:53:43 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,28 @@ int	check_state(t_philo **philo)
 	return (0);
 }
 
-void	ft_print_state(t_philo philo)
+void	ft_print_state(t_philo *philo)
 {
-	if (philo.state == STATE_DIED)
-		printf("%ld %d died\n", get_pgrm_time(philo.simu.time_start),
-			philo.num);
-	else if (philo.state == STATE_THINKING)
-		printf("%ld %d is thinking\n", get_pgrm_time(philo.simu.time_start),
-			philo.num);
-	else if (philo.state == STATE_FORK)
+	if (philo->state == STATE_DIED)
+		printf("%ld %d died\n", get_pgrm_time(philo->simu.time_start),
+			philo->num);
+	else if (philo->state == STATE_THINKING)
+		printf("%ld %d is thinking\n", get_pgrm_time(philo->simu.time_start),
+			philo->num);
+	else if (philo->state == STATE_FORK)
 		printf("%ld %d has taken a fork\n",
-			get_pgrm_time(philo.simu.time_start), philo.num);
-	else if (philo.state == STATE_EATING)
-		printf("%ld %d is eating\n", get_pgrm_time(philo.simu.time_start),
-			philo.num);
-	else if (philo.state == STATE_SLEEPING)
-		printf("%ld %d is sleeping\n", get_pgrm_time(philo.simu.time_start),
-			philo.num);
+			get_pgrm_time(philo->simu.time_start), philo->num);
+	else if (philo->state == STATE_EATING)
+		printf("%ld %d is eating\n", get_pgrm_time(philo->simu.time_start),
+			philo->num);
+	else if (philo->state == STATE_SLEEPING)
+		printf("%ld %d is sleeping\n", get_pgrm_time(philo->simu.time_start),
+			philo->num);
 }
 
 t_philo	*print_state(t_philo *philo)
 {
 	if (check_state(&philo))
-		ft_print_state(*philo);
+		ft_print_state(philo);
 	return (philo);
 }
