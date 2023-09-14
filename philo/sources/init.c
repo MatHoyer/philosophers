@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/14 10:13:04 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/14 13:23:39 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,28 +42,29 @@ void	init_perm(t_perm *perm)
 
 }
 
-void	init_simu(t_simu *simu, int ac, char **av)
+int	init_simu(t_simu *simu, int ac, char **av)
 {
 	gettimeofday(&simu->time_start, NULL);
 	simu->number_of_philosophers = ft_atoi(av[1]);
 	simu->end_if = -1;
 	if (simu->number_of_philosophers <= 0)
-		exit(printf("Error : Nombre de philosophes invalide (%s).\n", av[1]));
+		return (printf("Error : Bad number of philo (%s).\n", av[1]));
 	simu->time_to_die = ft_atoi(av[2]);
 	if (simu->time_to_die <= 0)
-		exit(printf("Error : Temps de vie invalide (%s).\n", av[2]));
+		return (printf("Error : Bad time to life (%s).\n", av[2]));
 	simu->time_to_eat = ft_atoi(av[3]);
 	if (simu->time_to_eat <= 0)
-		exit(printf("Error : Temps pour manger invalide (%s).\n", av[3]));
+		return (printf("Error : Bad time to eat (%s).\n", av[3]));
 	simu->time_to_sleep = ft_atoi(av[4]);
 	if (simu->time_to_sleep <= 0)
-		exit(printf("Error : Temps pour dormir invalide (%s).\n", av[4]));
+		return (printf("Error : Bad time to sleep (%s).\n", av[4]));
 	if (ac == 6)
 	{
 		simu->end_if = ft_atoi(av[5]);
 		if (simu->end_if <= 0)
-			exit(printf("Error : Nombre de repas invalide (%s).\n", av[5]));
+			return (printf("Error : Bad number of lunch (%s).\n", av[5]));
 	}
+	return (0);
 }
 
 t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
@@ -73,19 +74,25 @@ t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 
 	i = -1;
 	init_perm(perm_main);
-	init_simu(&simu_main, ac, av);
+	if (init_simu(&simu_main, ac, av) != 0)
+		return (NULL);
+	if (simu_main.number_of_philosophers == 1)
+	{
+		printf("0 1 is thinking\n");
+		usleep(simu_main.time_to_die * 1000);
+		printf("%d 1 died\n", simu_main.time_to_die);
+		return(NULL);
+	}
 	philo = malloc(sizeof(t_philo) * (simu_main.number_of_philosophers + 1));
 	if (!philo)
-		exit(printf("Error : Mauvaise allocation des philosophes.\n"));
+		return (printf("Error : Bad alloc.\n"), NULL);
 	while (++i <= simu_main.number_of_philosophers)
 	{
 		init_philo(&philo[i], simu_main, perm_main, i);
 		if (i != 1)
 			philo[i].neighbour_fork = &philo[i - 1].his_fork;
-		if (i == simu_main.number_of_philosophers && i != 1)
+		if (i == simu_main.number_of_philosophers)
 			philo[1].neighbour_fork = &philo[i].his_fork;
-		else if (i == 1)
-			philo[1].neighbour_fork = &philo[0].his_fork;
 	}
 	return (philo);
 }

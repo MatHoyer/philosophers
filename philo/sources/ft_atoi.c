@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:35:56 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/01 09:26:03 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/14 13:21:52 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_atoi(char *nptr)
 		i++;
 	}
 	if (nb > 2147483647 || nb < -2147483648)
-		exit(printf("Error : Bad input (%s).\n", nptr));
+		return (-1);
 	if (nptr[i] == '\0')
 		return ((int)nb);
 	return (-1);

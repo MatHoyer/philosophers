@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/14 11:55:42 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/14 13:15:47 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	*ft_thread(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->num % 2 == 0 || philo->num == philo->simu.number_of_philosophers)
-		usleep(philo->simu.time_to_eat * 100);
+		usleep(philo->simu.time_to_eat);
 	while (!is_end_waccess(philo))
 	{
 		print_waccess(philo);
@@ -139,7 +139,7 @@ void	create_thread(t_philo *philo)
 	{
 		print_waccess(&philo[i]);
 		if (pthread_create(&philo[i].thread, NULL, ft_thread, &philo[i]) != 0)
-			exit(1);
+			return ;
 	}
 	i = 0;
 	while (++i <= philo[0].simu.number_of_philosophers)
@@ -164,6 +164,6 @@ void	create_thread(t_philo *philo)
 		}
 		pthread_mutex_unlock(&philo[0].perm->mutex_access);
 		if (pthread_join(philo[i].thread, NULL) != 0)
-			exit(1);
+			return ;
 	}
 }
