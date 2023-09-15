@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/14 11:43:40 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 12:09:20 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef enum e_state
 	STATE_DIED,
 	STATE_THINKING,
 	STATE_FORK,
+	STATE_FORK_BIS,
 	STATE_EATING,
 	STATE_SLEEPING,
 }					t_state;
@@ -70,8 +71,9 @@ typedef struct s_philo
 	int				nb_eat;
 	t_state			state;
 	t_state			mem_state;
-	t_fork			his_fork;
-	t_fork			*neighbour_fork;
+	t_state			state_bf_die;
+	pthread_mutex_t	his_fork;
+	pthread_mutex_t	*neighbour_fork;
 	unsigned long	last_eat;
 	unsigned long	start_eat;
 	pthread_t		thread;

@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:58:27 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/14 13:15:17 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 12:58:50 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ int	main(int ac, char **av)
 	philo = NULL;
 	philo = init(philo, &perm_main, ac, av);
 	if (!philo)
-		return (1);
+		return (0);
 	create_thread(philo);
 	pthread_mutex_destroy(&perm_main.mutex_print);
 	pthread_mutex_destroy(&perm_main.mutex_access);
 	pthread_mutex_destroy(&philo->perm->mutex_time);
+	free(philo);
 	return (0);
 }

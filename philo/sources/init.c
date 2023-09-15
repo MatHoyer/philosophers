@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/14 13:23:39 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 12:58:08 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 	philo->nb_eat = 0;
 	philo->last_eat = 0;
 	philo->start_eat = 0;
-	pthread_mutex_init(&philo->his_fork.mutex, NULL);
+	pthread_mutex_init(&philo->his_fork, NULL);
 	if (philo->num == 0)
 	{
 		philo->state = STATE_VIDE;
@@ -29,6 +29,7 @@ void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 	}
 	philo->state = STATE_THINKING;
 	philo->mem_state = STATE_VIDE;
+	philo->state_bf_die = STATE_VIDE;
 	philo->simu = simu_main;
 	philo->perm = perm_main;
 }
@@ -39,7 +40,6 @@ void	init_perm(t_perm *perm)
 	pthread_mutex_init(&perm->mutex_access, NULL);
 	pthread_mutex_init(&perm->mutex_print, NULL);
 	pthread_mutex_init(&perm->mutex_time, NULL);
-
 }
 
 int	init_simu(t_simu *simu, int ac, char **av)
@@ -49,12 +49,12 @@ int	init_simu(t_simu *simu, int ac, char **av)
 	simu->end_if = -1;
 	if (simu->number_of_philosophers <= 0)
 		return (printf("Error : Bad number of philo (%s).\n", av[1]));
-	simu->time_to_die = ft_atoi(av[2]);
-	if (simu->time_to_die <= 0)
-		return (printf("Error : Bad time to life (%s).\n", av[2]));
 	simu->time_to_eat = ft_atoi(av[3]);
 	if (simu->time_to_eat <= 0)
 		return (printf("Error : Bad time to eat (%s).\n", av[3]));
+	simu->time_to_die = ft_atoi(av[2]);
+	if (simu->time_to_die <= 0 || simu->time_to_die < simu->time_to_eat)
+		return (printf("Error : Bad time to life (%s).\n", av[2]));
 	simu->time_to_sleep = ft_atoi(av[4]);
 	if (simu->time_to_sleep <= 0)
 		return (printf("Error : Bad time to sleep (%s).\n", av[4]));
@@ -80,19 +80,21 @@ t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 	{
 		printf("0 1 is thinking\n");
 		usleep(simu_main.time_to_die * 1000);
-		printf("%d 1 died\n", simu_main.time_to_die);
+		printf("%ld 1 died\n", get_pgrm_time(simu_main.time_start));
 		return(NULL);
 	}
 	philo = malloc(sizeof(t_philo) * (simu_main.number_of_philosophers + 1));
 	if (!philo)
 		return (printf("Error : Bad alloc.\n"), NULL);
 	while (++i <= simu_main.number_of_philosophers)
-	{
 		init_philo(&philo[i], simu_main, perm_main, i);
-		if (i != 1)
-			philo[i].neighbour_fork = &philo[i - 1].his_fork;
+	i = 0;
+	while (++i <= simu_main.number_of_philosophers)
+	{
 		if (i == simu_main.number_of_philosophers)
-			philo[1].neighbour_fork = &philo[i].his_fork;
+			philo[i].neighbour_fork = &philo[1].his_fork;
+		else
+			philo[i].neighbour_fork = &philo[i + 1].his_fork;
 	}
 	return (philo);
 }
