@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 12:09:20 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 13:24:48 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_perm
 	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_time;
 	t_bool			stop;
+	int				done_eating;
 }					t_perm;
 
 typedef struct s_simu

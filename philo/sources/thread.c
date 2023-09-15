@@ -6,15 +6,33 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 12:21:52 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 13:46:58 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+t_bool	is_done_eating_waccess(t_philo *philo)
+{
+	t_bool return_data;
+
+	return_data = false;
+	pthread_mutex_lock(&philo->perm->mutex_access);
+	if (philo->perm->done_eating == philo->simu.number_of_philosophers)
+		return_data = true;
+	pthread_mutex_unlock(&philo->perm->mutex_access);
+	return (return_data);
+}
+
 int	check_end_if(t_philo *philo)
 {
-	if (philo->nb_eat >= philo->simu.end_if && philo->simu.end_if != -1)
+	if (philo->nb_eat == philo->simu.end_if && philo->simu.end_if != -1)
+	{
+		pthread_mutex_lock(&philo->perm->mutex_access);
+		philo->perm->done_eating++;
+		pthread_mutex_unlock(&philo->perm->mutex_access);
+	}
+	if (is_done_eating_waccess(philo))
 	{
 		pthread_mutex_lock(&philo->perm->mutex_access);
 		philo->perm->stop = true;
@@ -84,6 +102,7 @@ void	check_for_eating(t_philo *philo)
 		print_waccess(philo);
 		modif_or_cmp_waccess(philo, STATE_EATING, TEST_MOD);
 		philo->start_eat = get_pgrm_time(philo->simu.time_start);
+		print_waccess(philo);
 	}
 }
 
@@ -99,6 +118,7 @@ void	check_for_sleeping(t_philo *philo)
 		philo->nb_eat++;
 		modif_or_cmp_waccess(philo, STATE_SLEEPING, TEST_MOD);
 		philo->last_eat = get_pgrm_time(philo->simu.time_start);
+		print_waccess(philo);
 	}
 }
 
@@ -110,6 +130,7 @@ void	check_for_thinking(t_philo *philo)
 		&& !is_end_waccess(philo))
 	{
 		modif_or_cmp_waccess(philo, STATE_THINKING, TEST_MOD);
+		print_waccess(philo);
 	}
 }
 
@@ -135,13 +156,16 @@ void	*ft_thread(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (philo->num % 2 != 0)
+		usleep((philo->simu.time_to_eat * 1000) / 2);
 	while (!is_end_waccess(philo))
 	{
-		print_waccess(philo);
 		check_for_eating(philo);
 		check_for_sleeping(philo);
 		check_for_thinking(philo);
 		check_for_die(philo);
+		if (philo->simu.number_of_philosophers % 2)
+			usleep(philo->simu.time_to_eat * 1000);
 	}
 	return (NULL);
 }

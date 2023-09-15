@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 12:58:08 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 13:24:57 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 void	init_perm(t_perm *perm)
 {
 	perm->stop = false;
+	perm->done_eating = 0;
 	pthread_mutex_init(&perm->mutex_access, NULL);
 	pthread_mutex_init(&perm->mutex_print, NULL);
 	pthread_mutex_init(&perm->mutex_time, NULL);
@@ -78,7 +79,10 @@ t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 		return (NULL);
 	if (simu_main.number_of_philosophers == 1)
 	{
-		printf("0 1 is thinking\n");
+		printf("%ld 1 is thinking\n", get_pgrm_time(simu_main.time_start));
+		printf("%ld 1 has taken a fork\n", get_pgrm_time(simu_main.time_start));
+		printf("%ld 1 has taken a fork\n", get_pgrm_time(simu_main.time_start));
+		printf("%ld 1 is eating\n", get_pgrm_time(simu_main.time_start));
 		usleep(simu_main.time_to_die * 1000);
 		printf("%ld 1 died\n", get_pgrm_time(simu_main.time_start));
 		return(NULL);
