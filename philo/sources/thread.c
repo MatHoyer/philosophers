@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 13:49:32 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/15 13:58:02 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ t_bool	is_done_eating_waccess(t_philo *philo)
 
 int	check_end_if(t_philo *philo)
 {
-	if (philo->nb_eat == philo->simu.end_if && philo->simu.end_if != -1)
+	if (philo->nb_eat >= philo->simu.end_if && philo->simu.end_if != -1)
 	{
 		pthread_mutex_lock(&philo->perm->mutex_access);
 		philo->perm->done_eating++;
-		philo->nb_eat++;
+		philo->nb_eat = -1;
 		pthread_mutex_unlock(&philo->perm->mutex_access);
 	}
 	if (is_done_eating_waccess(philo))
@@ -116,7 +116,8 @@ void	check_for_sleeping(t_philo *philo)
 	{
 		pthread_mutex_unlock(philo->neighbour_fork);
 		pthread_mutex_unlock(&philo->his_fork);
-		philo->nb_eat++;
+		if (philo->nb_eat != -1)
+			philo->nb_eat++;
 		modif_or_cmp_waccess(philo, STATE_SLEEPING, TEST_MOD);
 		philo->last_eat = get_pgrm_time(philo->simu.time_start);
 		print_waccess(philo);
