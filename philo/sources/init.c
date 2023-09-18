@@ -53,12 +53,12 @@ int	init_simu(t_simu *simu, int ac, char **av)
 	simu->end_if = -1;
 	if (simu->number_of_philosophers <= 0)
 		return (printf("Error : Bad number of philo (%s).\n", av[1]));
+	simu->time_to_die = ft_atoi(av[2]);
+	if (simu->time_to_die <= 0)
+		return (printf("Error : Bad time to life (%s).\n", av[2]));
 	simu->time_to_eat = ft_atoi(av[3]);
 	if (simu->time_to_eat <= 0)
 		return (printf("Error : Bad time to eat (%s).\n", av[3]));
-	simu->time_to_die = ft_atoi(av[2]);
-	if (simu->time_to_die <= 0 || simu->time_to_die < simu->time_to_eat)
-		return (printf("Error : Bad time to life (%s).\n", av[2]));
 	simu->time_to_sleep = ft_atoi(av[4]);
 	if (simu->time_to_sleep <= 0)
 		return (printf("Error : Bad time to sleep (%s).\n", av[4]));
@@ -73,12 +73,8 @@ int	init_simu(t_simu *simu, int ac, char **av)
 
 void	do_alone(t_simu simu_main, t_perm *perm_main)
 {
-	printf("%ld 1 is thinking\n", get_pgrm_time(perm_main->time_start));
 	printf("%ld 1 has taken a fork\n",
 		get_pgrm_time(perm_main->time_start));
-	printf("%ld 1 has taken a fork\n",
-		get_pgrm_time(perm_main->time_start));
-	printf("%ld 1 is eating\n", get_pgrm_time(perm_main->time_start));
 	usleep(simu_main.time_to_die * 1000);
 	printf("%ld 1 died\n", get_pgrm_time(perm_main->time_start));
 }

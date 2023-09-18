@@ -40,21 +40,16 @@ void	*ft_thread(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->num % 2 != 0)
 		usleep((philo->simu.time_to_eat * 1000) / 2);
-	else
-		usleep(1000);
 	while (!is_end_waccess(philo))
 	{
 		check_for_eating(philo);
 		check_for_sleeping(philo);
 		check_for_thinking(philo);
 		check_for_die(philo);
-		if (philo->simu.number_of_philosophers % 2)
-		{
-			usleep(philo->simu.time_to_eat);
-			pthread_mutex_lock(&philo->perm->mutex_time);
-			philo->perm->time_start += philo->simu.time_to_eat / 1000;
-			pthread_mutex_unlock(&philo->perm->mutex_time);
-		}
+		usleep(philo->simu.time_to_eat);
+		pthread_mutex_lock(&philo->perm->mutex_time);
+		philo->perm->time_start += philo->simu.time_to_eat / 1000;
+		pthread_mutex_unlock(&philo->perm->mutex_time);
 	}
 	return (NULL);
 }
