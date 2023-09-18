@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 13:12:30 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:20:55 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	*ft_thread(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->num % 2 != 0)
 		usleep((philo->simu.time_to_eat * 1000) / 2);
+	usleep(1000);
 	while (!is_end_waccess(philo))
 	{
 		check_for_eating(philo);
