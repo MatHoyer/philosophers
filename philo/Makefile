@@ -12,6 +12,8 @@ SRC = error.c \
 	main.c \
 	print_state.c \
 	thread.c \
+	do_state.c \
+	waccess.c \
 	time.c
 
 OBJS = $(SRC:.c=.o)

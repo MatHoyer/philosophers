@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:35:56 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/14 13:21:52 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:01:11 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	check_nb(char *str)
 
 int	ft_atoi(char *nptr)
 {
-	long nb;
-	int i;
+	long	nb;
+	int		i;
 
 	nb = 0;
 	i = 0;

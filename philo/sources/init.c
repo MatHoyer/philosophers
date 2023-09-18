@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 12:01:43 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:03:54 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,18 @@ int	init_simu(t_simu *simu, int ac, char **av)
 	return (0);
 }
 
+void	do_alone(t_simu simu_main, t_perm *perm_main)
+{
+	printf("%ld 1 is thinking\n", get_pgrm_time(perm_main->time_start));
+	printf("%ld 1 has taken a fork\n",
+		get_pgrm_time(perm_main->time_start));
+	printf("%ld 1 has taken a fork\n",
+		get_pgrm_time(perm_main->time_start));
+	printf("%ld 1 is eating\n", get_pgrm_time(perm_main->time_start));
+	usleep(simu_main.time_to_die * 1000);
+	printf("%ld 1 died\n", get_pgrm_time(perm_main->time_start));
+}
+
 t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 {
 	t_simu	simu_main;
@@ -81,15 +93,7 @@ t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 	if (init_simu(&simu_main, ac, av) != 0)
 		return (NULL);
 	if (simu_main.number_of_philosophers == 1)
-	{
-		printf("%ld 1 is thinking\n", get_pgrm_time(perm_main->time_start));
-		printf("%ld 1 has taken a fork\n", get_pgrm_time(perm_main->time_start));
-		printf("%ld 1 has taken a fork\n", get_pgrm_time(perm_main->time_start));
-		printf("%ld 1 is eating\n", get_pgrm_time(perm_main->time_start));
-		usleep(simu_main.time_to_die * 1000);
-		printf("%ld 1 died\n", get_pgrm_time(perm_main->time_start));
-		return(NULL);
-	}
+		return (do_alone(simu_main, perm_main), NULL);
 	philo = malloc(sizeof(t_philo) * (simu_main.number_of_philosophers + 1));
 	if (!philo)
 		return (printf("Error : Bad alloc.\n"), NULL);

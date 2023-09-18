@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 12:12:06 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:08:19 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,24 @@ t_philo				*init(t_philo *philo, t_perm *perm_main, int ac, char **av);
 
 int					cmp_state(char *state, char *test_state);
 t_philo				*print_state(t_philo *philo);
-unsigned long	time_waccess(t_philo *philo);
+unsigned long		time_waccess(t_philo *philo);
 unsigned long		get_pgrm_time(unsigned long start);
 void				*ft_thread(void *arg);
 void				create_thread(t_philo *philo);
+
+void				check_for_eating(t_philo *philo);
+void				check_for_sleeping(t_philo *philo);
+void				check_for_thinking(t_philo *philo);
+void				check_for_die(t_philo *philo);
+
+unsigned long		time_waccess(t_philo *philo);
+t_bool				is_done_eating_waccess(t_philo *philo);
+int					check_end_if(t_philo *philo);
+t_bool				is_end_waccess(t_philo *philo);
+void				print_waccess(t_philo *philo);
+
+t_bool				modif_or_cmp_waccess(t_philo *philo, t_state state,
+						t_test wanted);
 
 int					print_not_enought_arg_error(int ac);
 
