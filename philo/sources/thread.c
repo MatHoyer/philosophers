@@ -6,15 +6,25 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 13:58:02 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:44:09 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+unsigned long	time_waccess(t_philo *philo)
+{
+	unsigned long	time_ret;
+	
+	pthread_mutex_lock(&philo->perm->mutex_time);
+	time_ret = get_pgrm_time(philo->perm->time_start);
+	pthread_mutex_unlock(&philo->perm->mutex_time);
+	return (time_ret);
+}
+
 t_bool	is_done_eating_waccess(t_philo *philo)
 {
-	t_bool return_data;
+	t_bool	return_data;
 
 	return_data = false;
 	pthread_mutex_lock(&philo->perm->mutex_access);
@@ -102,7 +112,7 @@ void	check_for_eating(t_philo *philo)
 		modif_or_cmp_waccess(philo, STATE_FORK_BIS, TEST_MOD);
 		print_waccess(philo);
 		modif_or_cmp_waccess(philo, STATE_EATING, TEST_MOD);
-		philo->start_eat = get_pgrm_time(philo->simu.time_start);
+		philo->start_eat = time_waccess(philo);
 		print_waccess(philo);
 	}
 }
@@ -110,7 +120,7 @@ void	check_for_eating(t_philo *philo)
 void	check_for_sleeping(t_philo *philo)
 {
 	if (modif_or_cmp_waccess(philo, STATE_EATING, TEST_CMP)
-		&& get_pgrm_time(philo->simu.time_start)
+		&& time_waccess(philo)
 		- philo->start_eat >= (unsigned long)philo->simu.time_to_eat
 		&& !is_end_waccess(philo))
 	{
@@ -119,7 +129,7 @@ void	check_for_sleeping(t_philo *philo)
 		if (philo->nb_eat != -1)
 			philo->nb_eat++;
 		modif_or_cmp_waccess(philo, STATE_SLEEPING, TEST_MOD);
-		philo->last_eat = get_pgrm_time(philo->simu.time_start);
+		philo->last_eat = time_waccess(philo);
 		print_waccess(philo);
 	}
 }
@@ -127,7 +137,7 @@ void	check_for_sleeping(t_philo *philo)
 void	check_for_thinking(t_philo *philo)
 {
 	if (modif_or_cmp_waccess(philo, STATE_SLEEPING, TEST_CMP)
-		&& get_pgrm_time(philo->simu.time_start)
+		&& time_waccess(philo)
 		- philo->last_eat >= (unsigned long)philo->simu.time_to_sleep
 		&& !is_end_waccess(philo))
 	{
@@ -138,7 +148,7 @@ void	check_for_thinking(t_philo *philo)
 
 void	check_for_die(t_philo *philo)
 {
-	if (get_pgrm_time(philo->simu.time_start)
+	if (time_waccess(philo)
 		- philo->last_eat >= (unsigned long)philo->simu.time_to_die
 		&& !is_end_waccess(philo))
 	{
@@ -167,7 +177,12 @@ void	*ft_thread(void *arg)
 		check_for_thinking(philo);
 		check_for_die(philo);
 		if (philo->simu.number_of_philosophers % 2)
-			usleep(philo->simu.time_to_eat * 1000);
+		{
+			usleep(philo->simu.time_to_eat);
+			pthread_mutex_lock(&philo->perm->mutex_time);
+			philo->perm->time_start += philo->simu.time_to_eat / 1000;
+			pthread_mutex_unlock(&philo->perm->mutex_time);
+		}
 	}
 	return (NULL);
 }
@@ -208,7 +223,9 @@ void	create_thread(t_philo *philo)
 			pthread_mutex_unlock(&philo[i].his_fork);
 			pthread_mutex_destroy(&philo[i].his_fork);
 		}
-		else if ((philo[i - 1].state != STATE_EATING && i != 1) || (philo[philo[0].simu.number_of_philosophers].state == STATE_EATING && i == 1))
+		else if ((philo[i - 1].state != STATE_EATING && i != 1)
+			|| (philo[philo[0].simu.number_of_philosophers].state == STATE_EATING
+				&& i == 1))
 			pthread_mutex_destroy(&philo[i].his_fork);
 		pthread_mutex_unlock(&philo[0].perm->mutex_access);
 		if (pthread_join(philo[i].thread, NULL) != 0)

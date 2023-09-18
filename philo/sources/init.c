@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 13:24:57 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:01:43 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
 
 void	init_perm(t_perm *perm)
 {
+	struct timeval	curent;
+
+	gettimeofday(&curent, NULL);
+	perm->time_start = (curent.tv_sec * 1000) + (curent.tv_usec / 1000);
 	perm->stop = false;
 	perm->done_eating = 0;
 	pthread_mutex_init(&perm->mutex_access, NULL);
@@ -45,7 +49,6 @@ void	init_perm(t_perm *perm)
 
 int	init_simu(t_simu *simu, int ac, char **av)
 {
-	gettimeofday(&simu->time_start, NULL);
 	simu->number_of_philosophers = ft_atoi(av[1]);
 	simu->end_if = -1;
 	if (simu->number_of_philosophers <= 0)
@@ -79,12 +82,12 @@ t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
 		return (NULL);
 	if (simu_main.number_of_philosophers == 1)
 	{
-		printf("%ld 1 is thinking\n", get_pgrm_time(simu_main.time_start));
-		printf("%ld 1 has taken a fork\n", get_pgrm_time(simu_main.time_start));
-		printf("%ld 1 has taken a fork\n", get_pgrm_time(simu_main.time_start));
-		printf("%ld 1 is eating\n", get_pgrm_time(simu_main.time_start));
+		printf("%ld 1 is thinking\n", get_pgrm_time(perm_main->time_start));
+		printf("%ld 1 has taken a fork\n", get_pgrm_time(perm_main->time_start));
+		printf("%ld 1 has taken a fork\n", get_pgrm_time(perm_main->time_start));
+		printf("%ld 1 is eating\n", get_pgrm_time(perm_main->time_start));
 		usleep(simu_main.time_to_die * 1000);
-		printf("%ld 1 died\n", get_pgrm_time(simu_main.time_start));
+		printf("%ld 1 died\n", get_pgrm_time(perm_main->time_start));
 		return(NULL);
 	}
 	philo = malloc(sizeof(t_philo) * (simu_main.number_of_philosophers + 1));

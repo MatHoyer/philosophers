@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:29:35 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 13:13:13 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:12:35 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,22 @@ int	check_state(t_philo **philo)
 void	ft_print_state(t_philo *philo)
 {
 	if (philo->state == STATE_DIED)
-		printf("%ld %d died\n", get_pgrm_time(philo->simu.time_start),
+		printf("%ld %d died\n", time_waccess(philo),
 			philo->num);
 	else if (philo->state == STATE_THINKING)
-		printf("%ld %d is thinking\n", get_pgrm_time(philo->simu.time_start),
+		printf("%ld %d is thinking\n", time_waccess(philo),
 			philo->num);
 	else if (philo->state == STATE_FORK)
 		printf("%ld %d has taken a fork\n",
-			get_pgrm_time(philo->simu.time_start), philo->num);
+			time_waccess(philo), philo->num);
 	else if (philo->state == STATE_FORK_BIS)
 		printf("%ld %d has taken a fork\n",
-			get_pgrm_time(philo->simu.time_start), philo->num);
+			time_waccess(philo), philo->num);
 	else if (philo->state == STATE_EATING)
-		printf("%ld %d is eating\n", get_pgrm_time(philo->simu.time_start),
+		printf("%ld %d is eating\n", time_waccess(philo),
 			philo->num);
 	else if (philo->state == STATE_SLEEPING)
-		printf("%ld %d is sleeping\n", get_pgrm_time(philo->simu.time_start),
+		printf("%ld %d is sleeping\n", time_waccess(philo),
 			philo->num);
 }
 

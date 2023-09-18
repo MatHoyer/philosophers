@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/15 13:24:48 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:12:06 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ typedef struct s_perm
 	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_time;
 	t_bool			stop;
+	unsigned long	time_start;
 	int				done_eating;
 }					t_perm;
 
 typedef struct s_simu
 {
-	struct timeval	time_start;
 	int				number_of_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
@@ -88,7 +88,8 @@ t_philo				*init(t_philo *philo, t_perm *perm_main, int ac, char **av);
 
 int					cmp_state(char *state, char *test_state);
 t_philo				*print_state(t_philo *philo);
-unsigned long		get_pgrm_time(struct timeval start);
+unsigned long	time_waccess(t_philo *philo);
+unsigned long		get_pgrm_time(unsigned long start);
 void				*ft_thread(void *arg);
 void				create_thread(t_philo *philo);
 
