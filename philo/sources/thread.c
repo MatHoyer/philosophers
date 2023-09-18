@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 13:20:55 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:23:07 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ void	*ft_thread(void *arg)
 	return (NULL);
 }
 
-void	end_th(t_philo *philo, int i)
+void	end_th(t_philo *philo, int i, t_philo main)
 {
-	while (++i <= philo[0].simu.number_of_philosophers)
+	while (++i <= main.simu.number_of_philosophers)
 	{
-		pthread_mutex_lock(&philo[0].perm->mutex_access);
+		pthread_mutex_lock(&main.perm->mutex_access);
 		if (philo[i].state == STATE_FORK || philo[i].state_bf_die == STATE_FORK)
 		{
 			pthread_mutex_unlock(philo[i].neighbour_fork);
@@ -77,7 +77,7 @@ void	end_th(t_philo *philo, int i)
 			pthread_mutex_unlock(&philo[i].his_fork);
 			pthread_mutex_destroy(&philo[i].his_fork);
 		}
-		else if ((philo[philo[0].simu.number_of_philosophers].state == STATE_EATING
+		else if ((philo[main.simu.number_of_philosophers].state == STATE_EATING
 				|| (philo[i - 1].state != STATE_EATING && i != 1)) && i == 1)
 			pthread_mutex_destroy(&philo[i].his_fork);
 		pthread_mutex_unlock(&philo[0].perm->mutex_access);
@@ -105,5 +105,5 @@ void	create_thread(t_philo *philo)
 		i++;
 	}
 	i = 0;
-	end_th(philo, i);
+	end_th(philo, i, philo[0]);
 }
