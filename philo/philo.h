@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 13:08:19 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/19 12:37:28 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_perm
 	pthread_mutex_t	mutex_access;
 	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_time;
+	pthread_mutex_t	mutex_protec;
 	t_bool			stop;
 	unsigned long	time_start;
 	int				done_eating;
@@ -60,11 +61,6 @@ typedef struct s_simu
 	int				time_to_sleep;
 	int				end_if;
 }					t_simu;
-
-typedef struct s_fork
-{
-	pthread_mutex_t	mutex;
-}					t_fork;
 
 typedef struct s_philo
 {
