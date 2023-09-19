@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/19 12:37:28 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:20:41 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void				check_for_thinking(t_philo *philo);
 void				check_for_die(t_philo *philo);
 
 unsigned long		time_waccess(t_philo *philo);
-t_bool				is_done_eating_waccess(t_philo *philo);
+t_bool				is_done_eatingwaccess(t_philo *philo);
 int					check_end_if(t_philo *philo);
 t_bool				is_end_waccess(t_philo *philo);
 void				print_waccess(t_philo *philo);
@@ -103,6 +103,10 @@ void				print_waccess(t_philo *philo);
 t_bool				modif_or_cmp_waccess(t_philo *philo, t_state state,
 						t_test wanted);
 
-int					print_not_enought_arg_error(int ac);
+int					print_not_enought_argerror(int ac);
+
+void				do_alone(t_philo *philo);
+int					do_eat(t_philo *philo);
+int					do_sleep(t_philo *philo);
 
 #endif

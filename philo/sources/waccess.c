@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:06:29 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/19 11:51:22 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:20:41 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ unsigned long	time_waccess(t_philo *philo)
 	return (time_ret);
 }
 
-t_bool	is_done_eating_waccess(t_philo *philo)
+t_bool	is_done_eatingwaccess(t_philo *philo)
 {
 	t_bool	return_data;
 
@@ -32,25 +32,6 @@ t_bool	is_done_eating_waccess(t_philo *philo)
 		return_data = true;
 	pthread_mutex_unlock(&philo->perm->mutex_access);
 	return (return_data);
-}
-
-int	check_end_if(t_philo *philo)
-{
-	if (philo->nb_eat >= philo->simu.end_if && philo->simu.end_if != -1)
-	{
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->done_eating++;
-		philo->nb_eat = -1;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
-	}
-	if (is_done_eating_waccess(philo))
-	{
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->stop = true;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
-		return (1);
-	}
-	return (0);
 }
 
 t_bool	is_end_waccess(t_philo *philo)
@@ -77,4 +58,25 @@ void	print_waccess(t_philo *philo)
 		print_state(philo);
 		pthread_mutex_unlock(&philo->perm->mutex_print);
 	}
+}
+
+t_bool	modif_or_cmp_waccess(t_philo *philo, t_state state, t_test wanted)
+{
+	t_bool	return_data;
+
+	return_data = false;
+	if (wanted == TEST_CMP)
+	{
+		pthread_mutex_lock(&philo->perm->mutex_access);
+		if (philo->state == state)
+			return_data = true;
+		pthread_mutex_unlock(&philo->perm->mutex_access);
+	}
+	else if (TEST_MOD)
+	{
+		pthread_mutex_lock(&philo->perm->mutex_access);
+		philo->state = state;
+		pthread_mutex_unlock(&philo->perm->mutex_access);
+	}
+	return (return_data);
 }

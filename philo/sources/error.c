@@ -6,13 +6,13 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 11:51:00 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 13:01:01 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:20:41 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	print_not_enought_arg_error(int ac)
+int	print_not_enought_argerror(int ac)
 {
 	if (ac < 5)
 	{

@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:58:27 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/19 12:38:24 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/19 13:20:41 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int ac, char **av)
 	t_perm	perm_main;
 
 	if (ac < 5 || ac > 6)
-		return (print_not_enought_arg_error(ac));
+		return (print_not_enought_argerror(ac));
 	philo = NULL;
 	philo = init(philo, &perm_main, ac, av);
 	if (!philo)
