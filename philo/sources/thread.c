@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 09:43:32 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/18 13:38:18 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/19 10:09:55 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	*ft_thread(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	pthread_mutex_lock(&philo->perm->mutex_time);
+	pthread_mutex_unlock(&philo->perm->mutex_time);
 	if (philo->num % 2 != 0)
 		usleep((philo->simu.time_to_eat * 1000) / 2);
 	while (!is_end_waccess(philo))
@@ -46,10 +48,13 @@ void	*ft_thread(void *arg)
 		check_for_sleeping(philo);
 		check_for_thinking(philo);
 		check_for_die(philo);
-		usleep(philo->simu.time_to_eat);
-		pthread_mutex_lock(&philo->perm->mutex_time);
-		philo->perm->time_start += philo->simu.time_to_eat / 1000;
-		pthread_mutex_unlock(&philo->perm->mutex_time);
+		if (philo->simu.number_of_philosophers % 2)
+		{
+			usleep(philo->simu.time_to_eat);
+			pthread_mutex_lock(&philo->perm->mutex_time);
+			philo->perm->time_start += philo->simu.time_to_eat / 1000;
+			pthread_mutex_unlock(&philo->perm->mutex_time);
+		}
 	}
 	return (NULL);
 }
@@ -87,11 +92,13 @@ void	create_thread(t_philo *philo)
 	int	i;
 
 	i = 0;
+	pthread_mutex_lock(&philo[0].perm->mutex_time);
 	while (++i <= philo[0].simu.number_of_philosophers)
 	{
 		if (pthread_create(&philo[i].thread, NULL, ft_thread, &philo[i]) != 0)
 			return ;
 	}
+	pthread_mutex_unlock(&philo[0].perm->mutex_time);
 	i = 1;
 	while (!is_end_waccess(&philo[i]))
 	{
