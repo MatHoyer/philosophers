@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:07:41 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 13:44:53 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 13:53:06 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	check_end_if(t_philo *philo)
 	if (is_done_eatingwaccess(philo))
 	{
 		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->stop = true;
+		philo->perm->stop = philo->num;
 		pthread_mutex_unlock(&philo->perm->mutex_access);
 		return (1);
 	}
