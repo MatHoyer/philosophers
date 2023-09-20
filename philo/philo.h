@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/19 13:20:41 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 09:01:43 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct s_perm
 	pthread_mutex_t	mutex_time;
 	pthread_mutex_t	mutex_protec;
 	t_bool			stop;
-	unsigned long	time_start;
+	long long	time_start;
 	int				done_eating;
 }					t_perm;
 
@@ -71,8 +71,8 @@ typedef struct s_philo
 	t_state			state_bf_die;
 	pthread_mutex_t	his_fork;
 	pthread_mutex_t	*neighbour_fork;
-	unsigned long	last_eat;
-	unsigned long	start_eat;
+	long long	last_eat;
+	long long	start_eat;
 	pthread_t		thread;
 	t_simu			simu;
 	t_perm			*perm;
@@ -84,8 +84,8 @@ t_philo				*init(t_philo *philo, t_perm *perm_main, int ac, char **av);
 
 int					cmp_state(char *state, char *test_state);
 t_philo				*print_state(t_philo *philo);
-unsigned long		time_waccess(t_philo *philo);
-unsigned long		get_pgrm_time(unsigned long start);
+long long		time_waccess(t_philo *philo);
+long long		get_pgrm_time(long long start);
 void				*ft_thread(void *arg);
 void				create_thread(t_philo *philo);
 
@@ -94,7 +94,7 @@ void				check_for_sleeping(t_philo *philo);
 void				check_for_thinking(t_philo *philo);
 void				check_for_die(t_philo *philo);
 
-unsigned long		time_waccess(t_philo *philo);
+long long		time_waccess(t_philo *philo);
 t_bool				is_done_eatingwaccess(t_philo *philo);
 int					check_end_if(t_philo *philo);
 t_bool				is_end_waccess(t_philo *philo);
@@ -108,5 +108,6 @@ int					print_not_enought_argerror(int ac);
 void				do_alone(t_philo *philo);
 int					do_eat(t_philo *philo);
 int					do_sleep(t_philo *philo);
+int					do_think(t_philo *philo);
 
 #endif

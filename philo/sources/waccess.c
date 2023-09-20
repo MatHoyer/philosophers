@@ -6,15 +6,15 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:06:29 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/19 13:20:41 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 09:01:43 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-unsigned long	time_waccess(t_philo *philo)
+long long	time_waccess(t_philo *philo)
 {
-	unsigned long	time_ret;
+	long long	time_ret;
 
 	pthread_mutex_lock(&philo->perm->mutex_time);
 	time_ret = get_pgrm_time(philo->perm->time_start);
