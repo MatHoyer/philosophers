@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:04:50 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 11:40:33 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 12:10:49 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,14 @@ int	do_eat(t_philo *philo)
 	print_waccess(philo);
 	modif_or_cmp_waccess(philo, STATE_EATING, TEST_MOD);
 	print_waccess(philo);
-	check_for_die(philo);
-	if (is_end_waccess(philo))
-	{
-		pthread_mutex_unlock(&philo->his_fork);
-		pthread_mutex_unlock(philo->neighbour_fork);
+	if (check_and_unlock(philo))
 		return (1);
-	}
 	start = time_waccess(philo);
 	philo->last_eat = start;
 	while (time_waccess(philo) - start < (long long)philo->simu.time_to_eat)
 	{
-		check_for_die(philo);
-		if (is_end_waccess(philo))
-		{
-			pthread_mutex_unlock(&philo->his_fork);
-			pthread_mutex_unlock(philo->neighbour_fork);
+		if (check_and_unlock(philo))
 			return (1);
-		}
 	}
 	return (0);
 }
@@ -67,8 +57,7 @@ int	do_sleep(t_philo *philo)
 	pthread_mutex_unlock(&philo->his_fork);
 	pthread_mutex_unlock(philo->neighbour_fork);
 	start = time_waccess(philo);
-	while (time_waccess(philo)
-		- start < (long long)philo->simu.time_to_sleep)
+	while (time_waccess(philo) - start < (long long)philo->simu.time_to_sleep)
 	{
 		check_for_die(philo);
 		if (is_end_waccess(philo))
@@ -86,49 +75,14 @@ int	do_think(t_philo *philo)
 	modif_or_cmp_waccess(philo, STATE_THINKING, TEST_MOD);
 	print_waccess(philo);
 	start = time_waccess(philo);
-	while (time_waccess(philo) - start < (long long)philo->simu.time_to_eat - (long long)philo->simu.time_to_sleep)
+	while (time_waccess(philo) - start < (long long)philo->simu.time_to_eat
+		- (long long)philo->simu.time_to_sleep)
 	{
 		check_for_die(philo);
 		if (is_end_waccess(philo))
 		{
 			return (1);
 		}
-	}
-	return (0);
-}
-
-void	check_for_die(t_philo *philo)
-{
-	if (time_waccess(philo)
-		- philo->last_eat >= (long long)philo->simu.time_to_die
-		&& !is_end_waccess(philo))
-	{
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->state_bf_die = philo->state;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
-		modif_or_cmp_waccess(philo, STATE_DIED, TEST_MOD);
-		print_waccess(philo);
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->stop = true;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
-	}
-}
-
-int	check_end_if(t_philo *philo)
-{
-	if (philo->nb_eat >= philo->simu.end_if && philo->simu.end_if != -1)
-	{
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->done_eating++;
-		philo->nb_eat = -1;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
-	}
-	if (is_done_eatingwaccess(philo))
-	{
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->stop = true;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
-		return (1);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:58:27 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 12:03:06 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 12:04:38 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	main(int ac, char **av)
 
 	if (ac < 5 || ac > 6)
 		return (print_not_enought_argerror(ac));
+	i = 0;
 	philo = NULL;
 	philo = init(philo, &perm_main, ac, av);
 	if (!philo)
@@ -29,7 +30,6 @@ int	main(int ac, char **av)
 	pthread_mutex_destroy(&perm_main.mutex_print);
 	pthread_mutex_destroy(&perm_main.mutex_access);
 	pthread_mutex_destroy(&philo->perm->mutex_time);
-	i = 0;
 	while (++i < philo[0].simu.number_of_philosophers)
 		pthread_mutex_destroy(&philo[i].his_fork);
 	free(philo);
