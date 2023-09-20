@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 12:09:56 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 13:45:32 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_perm
 	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_time;
 	pthread_mutex_t	mutex_protec;
-	t_bool			stop;
+	int				stop;
 	long long		time_start;
 	int				done_eating;
 }					t_perm;
@@ -68,7 +68,6 @@ typedef struct s_philo
 	int				nb_eat;
 	t_state			state;
 	t_state			mem_state;
-	t_state			state_bf_die;
 	pthread_mutex_t	his_fork;
 	pthread_mutex_t	*neighbour_fork;
 	long long		last_eat;

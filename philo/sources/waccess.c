@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:06:29 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 09:01:43 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 13:47:11 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ t_bool	is_end_waccess(t_philo *philo)
 
 void	print_waccess(t_philo *philo)
 {
-	if (!is_end_waccess(philo))
+	int	value;
+
+	value = is_end_waccess(philo);
+	if (!value || value == philo->num)
 	{
 		pthread_mutex_lock(&philo->perm->mutex_print);
 		print_state(philo);

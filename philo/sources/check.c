@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:07:41 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 12:09:12 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/20 13:44:53 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,10 @@ void	check_for_die(t_philo *philo)
 		&& !is_end_waccess(philo))
 	{
 		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->state_bf_die = philo->state;
+		philo->perm->stop = philo->num;
 		pthread_mutex_unlock(&philo->perm->mutex_access);
 		modif_or_cmp_waccess(philo, STATE_DIED, TEST_MOD);
 		print_waccess(philo);
-		pthread_mutex_lock(&philo->perm->mutex_access);
-		philo->perm->stop = true;
-		pthread_mutex_unlock(&philo->perm->mutex_access);
 	}
 }
 
