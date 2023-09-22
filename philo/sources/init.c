@@ -5,52 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/21 11:43:39 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 13:41:42 by mhoyer           ###   ########.fr       */
+/*   Created: 2023/09/22 11:53:38 by mhoyer            #+#    #+#             */
+/*   Updated: 2023/09/22 13:44:25 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_philo(t_philo *philo, t_simu simu_main, t_perm *perm_main, int i)
+int	init_static_data(t_simu *simu, int ac, char **av)
 {
-	philo->num = i;
-	philo->nb_eat = 0;
-	philo->last_eat = 0;
-	philo->start_eat = 0;
-	pthread_mutex_init(&philo->his_fork, NULL);
-	if (philo->num == 0)
-	{
-		philo->state = STATE_VIDE;
-		philo->mem_state = STATE_VIDE;
-		philo->simu = simu_main;
-		philo->perm = perm_main;
-		return ;
-	}
-	philo->state = STATE_THINKING;
-	philo->mem_state = STATE_VIDE;
-	philo->simu = simu_main;
-	philo->perm = perm_main;
-}
-
-void	init_perm(t_perm *perm)
-{
-	struct timeval	curent;
-
-	gettimeofday(&curent, NULL);
-	perm->time_start = (curent.tv_sec * 1000) + (curent.tv_usec / 1000);
-	perm->stop = false;
-	perm->done_eating = 0;
-	pthread_mutex_init(&perm->mutex_protec, NULL);
-	pthread_mutex_init(&perm->mutex_access, NULL);
-	pthread_mutex_init(&perm->mutex_print, NULL);
-	pthread_mutex_init(&perm->mutex_time, NULL);
-}
-
-int	init_simu(t_simu *simu, int ac, char **av)
-{
-	simu->number_of_philosophers = ft_atoi(av[1]);
 	simu->end_if = -1;
+	simu->number_of_philosophers = ft_atoi(av[1]);
 	if (simu->number_of_philosophers <= 0)
 		return (printf("Error : Bad number of philo (%s).\n", av[1]));
 	simu->time_to_die = ft_atoi(av[2]);
@@ -68,30 +33,55 @@ int	init_simu(t_simu *simu, int ac, char **av)
 		if (simu->end_if <= 0)
 			return (printf("Error : Bad number of lunch (%s).\n", av[5]));
 	}
+	simu->time_start = get_pgrm_time(0);
 	return (0);
 }
 
-t_philo	*init(t_philo *philo, t_perm *perm_main, int ac, char **av)
+int	init_data(t_simu *simu)
 {
-	t_simu	simu_main;
-	int		i;
+	simu->stop = 0;
+	simu->done_eating = 0;
+	if (pthread_mutex_init(&simu->mutex_access, NULL)
+		|| pthread_mutex_init(&simu->mutex_print, NULL))
+		return (printf("Error: Bad mutex.\n"), 1);
+	return (0);
+}
 
-	i = -1;
-	init_perm(perm_main);
-	if (init_simu(&simu_main, ac, av) != 0)
+int	init_philo(t_philo *philo, t_simu *simu_main, int i)
+{
+	philo->num = i + 1;
+	philo->nb_eat = 0;
+	philo->last_eat = 0;
+	philo->his_fork.status = 0;
+	philo->simu = simu_main;
+	if (pthread_mutex_init(&philo->his_fork.fork, NULL)
+		|| pthread_mutex_init(&philo->his_fork.access, NULL))
+		return (printf("Error: Bad fork.\n"), 1);
+	return (0);
+}
+
+t_philo	*init(t_philo *philo, t_simu *simu_main, int ac, char **av)
+{
+	int i;
+
+	if (init_static_data(simu_main, ac, av) || init_data(simu_main))
 		return (NULL);
-	philo = malloc(sizeof(t_philo) * (simu_main.number_of_philosophers + 1));
+	philo = malloc(sizeof(t_philo) * simu_main->number_of_philosophers);
 	if (!philo)
-		return (printf("Error : Bad alloc.\n"), NULL);
-	while (++i <= simu_main.number_of_philosophers)
-		init_philo(&philo[i], simu_main, perm_main, i);
-	i = 0;
-	while (++i <= simu_main.number_of_philosophers)
+		return (NULL);
+	i = -1;
+	while (++i < simu_main->number_of_philosophers)
 	{
-		if (i == simu_main.number_of_philosophers)
-			philo[i].neighbour_fork = &philo[1].his_fork;
-		else
+		if (init_philo(&philo[i], simu_main, i))
+			return (NULL);
+	}
+	i = -1;
+	while (++i < simu_main->number_of_philosophers)
+	{
+		if (i != simu_main->number_of_philosophers - 1)
 			philo[i].neighbour_fork = &philo[i + 1].his_fork;
+		else
+			philo[i].neighbour_fork = &philo[0].his_fork;
 	}
 	return (philo);
 }

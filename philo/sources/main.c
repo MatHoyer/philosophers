@@ -5,33 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/21 10:58:27 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 12:04:38 by mhoyer           ###   ########.fr       */
+/*   Created: 2023/09/22 11:48:31 by mhoyer            #+#    #+#             */
+/*   Updated: 2023/09/22 13:04:21 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	end_pgrm(t_philo *philo)
+{
+	pthread_mutex_destroy(&philo->simu->mutex_access);
+	pthread_mutex_destroy(&philo->simu->mutex_print);
+	free(philo);
+}
+
 int	main(int ac, char **av)
 {
 	t_philo	*philo;
-	t_perm	perm_main;
-	int		i;
+	t_simu	simu_main;
 
+	philo = NULL;
 	if (ac < 5 || ac > 6)
 		return (print_not_enought_argerror(ac));
-	i = 0;
-	philo = NULL;
-	philo = init(philo, &perm_main, ac, av);
+	philo = init(philo, &simu_main, ac, av);
 	if (!philo)
-		return (1);
-	create_thread(philo);
-	pthread_mutex_destroy(&perm_main.mutex_protec);
-	pthread_mutex_destroy(&perm_main.mutex_print);
-	pthread_mutex_destroy(&perm_main.mutex_access);
-	pthread_mutex_destroy(&philo->perm->mutex_time);
-	while (++i < philo[0].simu.number_of_philosophers)
-		pthread_mutex_destroy(&philo[i].his_fork);
-	free(philo);
+		return (printf("Error: Bad philo alloc.\n"), 1);
+	if (create_thread(philo, simu_main))
+		return (printf("Error: Bad thread.\n"), 1);
+	end_pgrm(philo);
 	return (0);
 }

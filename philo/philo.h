@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/20 13:45:32 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/22 13:17:44 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,90 +19,61 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef enum e_state
-{
-	STATE_VIDE,
-	STATE_DIED,
-	STATE_THINKING,
-	STATE_FORK,
-	STATE_FORK_BIS,
-	STATE_EATING,
-	STATE_SLEEPING,
-}					t_state;
+# define FORK "has taken a fork\n"
+# define EAT "is eating\n"
+# define SLEEP "is sleeping\n"
+# define THINK "is thinking\n"
+# define DIE "is died\n"
 
-typedef enum e_bool
+typedef struct s_fork
 {
-	false,
-	true,
-}					t_bool;
-
-typedef enum e_test
-{
-	TEST_CMP,
-	TEST_MOD,
-}					t_test;
-
-typedef struct s_perm
-{
-	pthread_mutex_t	mutex_access;
-	pthread_mutex_t	mutex_print;
-	pthread_mutex_t	mutex_time;
-	pthread_mutex_t	mutex_protec;
-	int				stop;
-	long long		time_start;
-	int				done_eating;
-}					t_perm;
+	int				status;
+	pthread_mutex_t	fork;
+	pthread_mutex_t	access;
+}					t_fork;
 
 typedef struct s_simu
 {
+	pthread_mutex_t	mutex_access;
+	int				stop;
+	int				done_eating;
+	pthread_mutex_t	mutex_print;
 	int				number_of_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				end_if;
+	long long		time_start;
 }					t_simu;
 
 typedef struct s_philo
 {
 	int				num;
 	int				nb_eat;
-	t_state			state;
-	t_state			mem_state;
-	pthread_mutex_t	his_fork;
-	pthread_mutex_t	*neighbour_fork;
 	long long		last_eat;
-	long long		start_eat;
+	t_fork			his_fork;
+	t_fork			*neighbour_fork;
 	pthread_t		thread;
-	t_simu			simu;
-	t_perm			*perm;
+	t_simu			*simu;
 }					t_philo;
-
-int					ft_atoi(char *nptr);
-
-t_philo				*init(t_philo *philo, t_perm *perm_main, int ac, char **av);
-
-t_philo				*print_state(t_philo *philo);
-long long			get_pgrm_time(long long start);
-void				create_thread(t_philo *philo);
-void				*ft_thread(void *arg);
-
-void				check_for_die(t_philo *philo);
-int					check_and_unlock(t_philo *philo);
-int					check_end_if(t_philo *philo);
-
-long long			time_waccess(t_philo *philo);
-t_bool				is_done_eatingwaccess(t_philo *philo);
-t_bool				is_end_waccess(t_philo *philo);
-void				print_waccess(t_philo *philo);
-
-t_bool				modif_or_cmp_waccess(t_philo *philo, t_state state,
-						t_test wanted);
 
 int					print_not_enought_argerror(int ac);
 
-void				do_alone(t_philo *philo);
-int					do_eat(t_philo *philo);
-int					do_sleep(t_philo *philo);
-int					do_think(t_philo *philo);
+int					ft_atoi(char *nptr);
+
+t_philo				*init(t_philo *philo, t_simu *simu_main, int ac, char **av);
+
+long long			get_pgrm_time(long long pgrm_start);
+
+void				print_state(t_philo *philo, char *state);
+
+int					create_thread(t_philo *philo, t_simu simu);
+
+void				*ft_thread(void *arg);
+
+int					test_fork(t_philo *philo);
+int					is_end(t_philo *philo);
+void				is_die(t_philo *philo);
+void				reset_fork(t_philo *philo);
 
 #endif

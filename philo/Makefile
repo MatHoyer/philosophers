@@ -6,16 +6,15 @@ SRC_PATH = sources/
 
 OBJS_PATH = obj/
 
-SRC = error.c \
+SRC = main.c \
 	ft_atoi.c \
+	error.c \
 	init.c \
-	main.c \
+	time.c \
 	print_state.c \
-	thread.c \
-	do_state.c \
+	routine.c \
 	waccess.c \
-	check.c \
-	time.c
+	thread.c
 
 OBJS = $(SRC:.c=.o)
 
@@ -37,8 +36,6 @@ $(NAME) : $(PREFO)
 	@echo "Compilation de Philosophers en cours..."
 	@$(CC) $(PREFO) -o $(NAME)
 	@echo "Terminé!"
-
-bonus : all
 
 $(OBJ_DIR) :
 	@mkdir -p $(OBJ_DIR)
