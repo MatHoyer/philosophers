@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:53:38 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/22 13:44:25 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/22 14:58:04 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,8 @@ int	init_data(t_simu *simu)
 {
 	simu->stop = 0;
 	simu->done_eating = 0;
-	if (pthread_mutex_init(&simu->mutex_access, NULL)
-		|| pthread_mutex_init(&simu->mutex_print, NULL))
-		return (printf("Error: Bad mutex.\n"), 1);
+	pthread_mutex_init(&simu->mutex_access, NULL);
+	pthread_mutex_init(&simu->mutex_print, NULL);
 	return (0);
 }
 
@@ -54,9 +53,8 @@ int	init_philo(t_philo *philo, t_simu *simu_main, int i)
 	philo->last_eat = 0;
 	philo->his_fork.status = 0;
 	philo->simu = simu_main;
-	if (pthread_mutex_init(&philo->his_fork.fork, NULL)
-		|| pthread_mutex_init(&philo->his_fork.access, NULL))
-		return (printf("Error: Bad fork.\n"), 1);
+	pthread_mutex_init(&philo->his_fork.access, NULL);
+	pthread_mutex_init(&philo->his_fork.fork, NULL);
 	return (0);
 }
 

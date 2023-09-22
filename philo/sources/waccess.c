@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:40:03 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/22 13:34:03 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/22 15:02:55 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ int	is_end(t_philo *philo)
 
 void	reset_fork(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->his_fork.fork);
 	pthread_mutex_unlock(&philo->neighbour_fork->fork);
+	pthread_mutex_unlock(&philo->his_fork.fork);
 	pthread_mutex_lock(&philo->his_fork.access);
-	pthread_mutex_lock(&philo->neighbour_fork->access);
 	philo->his_fork.status = 0;
+	pthread_mutex_unlock(&philo->his_fork.access);
+	pthread_mutex_lock(&philo->neighbour_fork->access);
 	philo->neighbour_fork->status = 0;
 	pthread_mutex_unlock(&philo->neighbour_fork->access);
-	pthread_mutex_unlock(&philo->his_fork.access);
 
 }
 
@@ -52,15 +52,21 @@ int	test_fork(t_philo *philo)
 
 	test = 0;
 	pthread_mutex_lock(&philo->his_fork.access);
-	pthread_mutex_lock(&philo->neighbour_fork->access);
 	test += philo->his_fork.status;
-	test += philo->neighbour_fork->status;
-	if (test != 0)
-	{
-		philo->his_fork.status = 1;
-		philo->neighbour_fork->status = 1;
-	}
-	pthread_mutex_unlock(&philo->neighbour_fork->access);
 	pthread_mutex_unlock(&philo->his_fork.access);
+	pthread_mutex_lock(&philo->neighbour_fork->access);
+	test += philo->neighbour_fork->status;
+	pthread_mutex_unlock(&philo->neighbour_fork->access);
+	if (test == 0)
+	{
+		pthread_mutex_lock(&philo->neighbour_fork->fork);
+		pthread_mutex_lock(&philo->his_fork.fork);
+		pthread_mutex_lock(&philo->his_fork.access);
+		philo->his_fork.status = 1;
+		pthread_mutex_unlock(&philo->his_fork.access);
+		pthread_mutex_lock(&philo->neighbour_fork->access);
+		philo->neighbour_fork->status = 1;
+		pthread_mutex_unlock(&philo->neighbour_fork->access);
+	}
 	return (test == 0);
 }

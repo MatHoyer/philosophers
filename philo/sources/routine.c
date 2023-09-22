@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:36:17 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/22 13:43:44 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/22 14:49:20 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ void	do_alone(t_philo *philo)
 
 int	do_eat(t_philo *philo)
 {
+	long long	start;
+
 	print_state(philo, THINK);
-	// usleep(1000);
+	usleep(1000);
 	while (!test_fork(philo))
 	{
 		is_die(philo);
@@ -32,14 +34,13 @@ int	do_eat(t_philo *philo)
 			return (1);
 		}
 	}
-	pthread_mutex_lock(&philo->his_fork.fork);
-	pthread_mutex_lock(&philo->neighbour_fork->fork);
 	print_state(philo, FORK);
 	print_state(philo, FORK);
-	philo->last_eat = get_pgrm_time(philo->simu->time_start);
 	print_state(philo, EAT);
+	start = get_pgrm_time(philo->simu->time_start);
+	philo->last_eat = start;
 	while (get_pgrm_time(philo->simu->time_start)
-		- philo->last_eat < (long long)philo->simu->time_to_eat)
+		- start < (long long)philo->simu->time_to_eat)
 	{
 		is_die(philo);
 		if (is_end(philo))
@@ -58,8 +59,8 @@ int	do_sleep(t_philo *philo)
 
 	philo->nb_eat++;
 	reset_fork(philo);
-	start = get_pgrm_time(philo->simu->time_start);
 	print_state(philo, SLEEP);
+	start = get_pgrm_time(philo->simu->time_start);
 	while (get_pgrm_time(philo->simu->time_start)
 		- start < (long long)philo->simu->time_to_sleep)
 	{
