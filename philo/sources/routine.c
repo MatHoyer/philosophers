@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:36:17 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:45:19 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 11:33:59 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ int	do_sleep(t_philo *philo)
 {
 	long long	start;
 
-	philo->nb_eat++;
+	if (philo->nb_eat != -1)
+		philo->nb_eat++;
+	is_done_eating(philo);
 	if (reset_fork(philo))
 		return (1);
 	print_state(philo, SLEEP);
@@ -83,7 +85,7 @@ void	*ft_thread(void *arg)
 		return (do_alone(philo), NULL);
 	if (philo->num % 2 == 0)
 		usleep(100);
-	while (!is_end(philo))
+	while (is_end(philo) == 0)
 	{
 		if (do_eat(philo) || do_sleep(philo) || do_think(philo))
 			return (NULL);

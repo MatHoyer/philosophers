@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:14:23 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:42:29 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 11:34:48 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	print_state(t_philo *philo, char *state)
 		pthread_mutex_unlock(&philo->simu->mutex_print);
 		if (value != 0)
 		{
-			pthread_mutex_lock(&philo->simu->mutex_access);
+			pthread_mutex_lock(&philo->simu->mutex_stop);
 			philo->simu->stop = -1;
-			pthread_mutex_unlock(&philo->simu->mutex_access);
+			pthread_mutex_unlock(&philo->simu->mutex_stop);
 		}
 	}
 }

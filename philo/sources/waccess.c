@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:40:03 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:34:31 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 11:25:07 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	is_die(t_philo *philo)
 	if (time_waccess(philo)
 		- philo->last_eat > philo->simu->time_to_die)
 	{
-		pthread_mutex_lock(&philo->simu->mutex_access);
+		pthread_mutex_lock(&philo->simu->mutex_stop);
 		if (philo->simu->stop == 0)
 			philo->simu->stop = philo->num;
-		pthread_mutex_unlock(&philo->simu->mutex_access);
+		pthread_mutex_unlock(&philo->simu->mutex_stop);
 	}
 }
 
@@ -28,9 +28,9 @@ int	is_end(t_philo *philo)
 {
 	int	value;
 
-	pthread_mutex_lock(&philo->simu->mutex_access);
+	pthread_mutex_lock(&philo->simu->mutex_stop);
 	value = philo->simu->stop;
-	pthread_mutex_unlock(&philo->simu->mutex_access);
+	pthread_mutex_unlock(&philo->simu->mutex_stop);
 	return (value);
 }
 

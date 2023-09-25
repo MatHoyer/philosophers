@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:22:18 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 11:22:57 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ typedef struct s_fork
 
 typedef struct s_simu
 {
-	pthread_mutex_t	mutex_access;
+	pthread_mutex_t	mutex_stop;
+	pthread_mutex_t mutex_eat;
 	pthread_mutex_t	mutex_time;
 	int				stop;
 	int				done_eating;
@@ -77,6 +78,7 @@ void				*ft_thread(void *arg);
 int					test_fork(t_philo *philo);
 int					set_fork(t_philo *philo);
 int					reset_fork(t_philo *philo);
+void				is_done_eating(t_philo *philo);
 int					is_end(t_philo *philo);
 void				is_die(t_philo *philo);
 

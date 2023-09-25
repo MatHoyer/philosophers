@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:48:31 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:13:36 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 11:36:04 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	end_pgrm(t_philo *philo)
 		pthread_mutex_destroy(&philo[i].his_fork.access);
 		pthread_mutex_destroy(&philo[i].his_fork.fork);
 	}
-	pthread_mutex_destroy(&philo->simu->mutex_access);
+	pthread_mutex_destroy(&philo->simu->mutex_eat);
+	pthread_mutex_destroy(&philo->simu->mutex_stop);
 	pthread_mutex_destroy(&philo->simu->mutex_print);
 	pthread_mutex_destroy(&philo->simu->mutex_time);
 	free(philo);
@@ -38,7 +39,7 @@ int	main(int ac, char **av)
 		return (print_not_enought_argerror(ac));
 	philo = init(philo, &simu_main, ac, av);
 	if (!philo)
-		return (printf("Error: Bad philo alloc.\n"), 1);
+		return (1);
 	if (create_thread(philo, simu_main))
 		return (printf("Error: Bad thread.\n"), 1);
 	end_pgrm(philo);

@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:53:38 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:22:05 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 11:36:11 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	init_static_data(t_simu *simu, int ac, char **av)
 {
 	simu->end_if = -1;
 	simu->number_of_philosophers = ft_atoi(av[1]);
-	if (simu->number_of_philosophers <= 0)
+	if (simu->number_of_philosophers <= 0 || simu->number_of_philosophers > 200)
 		return (printf("Error : Bad number of philo (%s).\n", av[1]));
 	simu->time_to_die = ft_atoi(av[2]);
 	if (simu->time_to_die <= 0)
@@ -41,7 +41,8 @@ int	init_data(t_simu *simu)
 {
 	simu->stop = 0;
 	simu->done_eating = 0;
-	pthread_mutex_init(&simu->mutex_access, NULL);
+	pthread_mutex_init(&simu->mutex_stop, NULL);
+	pthread_mutex_init(&simu->mutex_eat, NULL);
 	pthread_mutex_init(&simu->mutex_print, NULL);
 	pthread_mutex_init(&simu->mutex_time, NULL);
 	return (0);
@@ -67,7 +68,7 @@ t_philo	*init(t_philo *philo, t_simu *simu_main, int ac, char **av)
 		return (NULL);
 	philo = malloc(sizeof(t_philo) * simu_main->number_of_philosophers);
 	if (!philo)
-		return (NULL);
+		return (printf("Error: Bad philo alloc.\n"), NULL);
 	i = -1;
 	while (++i < simu_main->number_of_philosophers)
 	{
