@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:53:38 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/22 14:58:04 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 10:22:05 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	init_data(t_simu *simu)
 	simu->done_eating = 0;
 	pthread_mutex_init(&simu->mutex_access, NULL);
 	pthread_mutex_init(&simu->mutex_print, NULL);
+	pthread_mutex_init(&simu->mutex_time, NULL);
 	return (0);
 }
 

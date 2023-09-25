@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:48:31 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/22 13:04:21 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 10:13:36 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,17 @@
 
 void	end_pgrm(t_philo *philo)
 {
+	int	i;
+
+	i = -1;
+	while (++i < philo[0].simu->number_of_philosophers)
+	{
+		pthread_mutex_destroy(&philo[i].his_fork.access);
+		pthread_mutex_destroy(&philo[i].his_fork.fork);
+	}
 	pthread_mutex_destroy(&philo->simu->mutex_access);
 	pthread_mutex_destroy(&philo->simu->mutex_print);
+	pthread_mutex_destroy(&philo->simu->mutex_time);
 	free(philo);
 }
 
