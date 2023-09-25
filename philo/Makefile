@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I. -MMD -g3
+CFLAGS = -Wall -Wextra -Werror -I. -MMD -g3 -fsanitize=thread
 
 SRC_PATH = sources/
 
@@ -34,7 +34,7 @@ all : $(NAME)
 
 $(NAME) : $(PREFO)
 	@echo "Compilation de Philosophers en cours..."
-	@$(CC) $(PREFO) -o $(NAME)
+	@$(CC) $(CFLAGS) $(PREFO) -o $(NAME)
 	@echo "Terminé!"
 
 $(OBJ_DIR) :
