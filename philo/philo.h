@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/22 13:17:44 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/25 09:56:36 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define EAT "is eating\n"
 # define SLEEP "is sleeping\n"
 # define THINK "is thinking\n"
-# define DIE "is died\n"
+# define DIE "died\n"
 
 typedef struct s_fork
 {
@@ -74,6 +74,7 @@ void				*ft_thread(void *arg);
 int					test_fork(t_philo *philo);
 int					is_end(t_philo *philo);
 void				is_die(t_philo *philo);
-void				reset_fork(t_philo *philo);
+int					reset_fork(t_philo *philo);
+int					set_fork(t_philo *philo);
 
 #endif

@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I. -MMD -g3 -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -I. -MMD -g3
 
 SRC_PATH = sources/
 
