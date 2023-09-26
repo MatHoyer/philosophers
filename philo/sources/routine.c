@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:36:17 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 13:40:48 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 13:49:08 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void	*ft_thread(void *arg)
 	{
 		if (do_eat(philo) || do_sleep(philo) || do_think(philo))
 			return (NULL);
-		usleep(20);
+		if (philo->simu->number_of_philosophers == 3)
+			ft_usleep(philo->simu->time_to_eat, philo);
 	}
 	return (NULL);
 }
