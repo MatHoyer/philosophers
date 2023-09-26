@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:36:17 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 13:49:08 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 14:25:22 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,27 +50,36 @@ int	do_sleep(t_philo *philo)
 	return (0);
 }
 
-int	do_think(t_philo *philo)
+int	absol(int value)
 {
-	print_state(philo, THINK);
-	return (0);
+	if (value < 0)
+		return (-value);
+	return (value);
+}
+
+void	should_sleep(t_philo *philo, int compl)
+{
+	if (philo->simu->number_of_philosophers % 2 && (compl <= 10))
+		ft_usleep(philo->simu->time_to_eat, philo);
 }
 
 void	*ft_thread(void *arg)
 {
 	t_philo	*philo;
+	int		compl;
 
 	philo = (t_philo *)arg;
 	if (philo->simu->number_of_philosophers == 1)
 		return (do_alone(philo), NULL);
+	compl = absol(philo->simu->time_to_die - philo->simu->time_to_eat * 3);
 	if (philo->num % 2 == 0)
 		usleep(100);
 	while (is_end(philo) == 0)
 	{
-		if (do_eat(philo) || do_sleep(philo) || do_think(philo))
+		if (do_eat(philo) || do_sleep(philo))
 			return (NULL);
-		if (philo->simu->number_of_philosophers == 3)
-			ft_usleep(philo->simu->time_to_eat, philo);
+		print_state(philo, THINK);
+		should_sleep(philo, compl);
 	}
 	return (NULL);
 }

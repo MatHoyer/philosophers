@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:30:45 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 13:28:12 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 14:33:22 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	monitor(t_philo *philo)
 {
 	int		i;
 
-	while (1)
+	while (!is_end(philo))
 	{
 		i = -1;
 		while (++i < philo[0].simu->number_of_philosophers)
