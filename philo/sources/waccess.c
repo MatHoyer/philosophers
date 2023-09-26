@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:40:03 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 14:36:55 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 15:25:26 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	is_done_eating(t_philo *philo)
 		{
 			pthread_mutex_lock(&philo->simu->mutex_stop);
 			philo->simu->stop = 1;
-			pthread_mutex_unlock(&philo->simu->mutex_stop);	
+			pthread_mutex_unlock(&philo->simu->mutex_stop);
 		}
 		pthread_mutex_unlock(&philo->simu->mutex_eat);
 	}

@@ -6,11 +6,18 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:48:31 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 10:54:16 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 15:27:25 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	absol(int value)
+{
+	if (value < 0)
+		return (-value);
+	return (value);
+}
 
 void	end_pgrm(t_philo *philo)
 {

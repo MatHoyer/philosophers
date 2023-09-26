@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 13:29:08 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 15:26:05 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,7 @@ int					reset_fork(t_philo *philo);
 
 void				is_done_eating(t_philo *philo);
 int					is_end(t_philo *philo);
+
+int					absol(int value);
 
 #endif

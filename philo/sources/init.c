@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:53:38 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 10:53:36 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 15:25:08 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	init_philo(t_philo *philo, t_simu *simu_main, int i)
 
 t_philo	*init(t_philo *philo, t_simu *simu_main, int ac, char **av)
 {
-	int i;
+	int	i;
 
 	if (init_static_data(simu_main, ac, av) || init_data(simu_main))
 		return (NULL);

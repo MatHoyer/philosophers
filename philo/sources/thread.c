@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:30:45 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/26 14:33:22 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 15:27:38 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	monitor(t_philo *philo)
 
 int	create_thread(t_philo *philo, t_simu *simu)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	simu->time_start = get_start();
