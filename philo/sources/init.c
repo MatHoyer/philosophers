@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 11:53:38 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 11:36:11 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 10:53:36 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	init_static_data(t_simu *simu, int ac, char **av)
 		if (simu->end_if <= 0)
 			return (printf("Error : Bad number of lunch (%s).\n", av[5]));
 	}
-	simu->time_start = get_pgrm_time(0);
+	simu->time_start = 0;
 	return (0);
 }
 
@@ -44,7 +44,6 @@ int	init_data(t_simu *simu)
 	pthread_mutex_init(&simu->mutex_stop, NULL);
 	pthread_mutex_init(&simu->mutex_eat, NULL);
 	pthread_mutex_init(&simu->mutex_print, NULL);
-	pthread_mutex_init(&simu->mutex_time, NULL);
 	return (0);
 }
 
@@ -53,9 +52,7 @@ int	init_philo(t_philo *philo, t_simu *simu_main, int i)
 	philo->num = i + 1;
 	philo->nb_eat = 0;
 	philo->last_eat = 0;
-	philo->his_fork.status = 0;
 	philo->simu = simu_main;
-	pthread_mutex_init(&philo->his_fork.access, NULL);
 	pthread_mutex_init(&philo->his_fork.fork, NULL);
 	return (0);
 }

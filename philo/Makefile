@@ -14,6 +14,7 @@ SRC = main.c \
 	print_state.c \
 	routine.c \
 	waccess.c \
+	fork.c \
 	thread.c
 
 OBJS = $(SRC:.c=.o)

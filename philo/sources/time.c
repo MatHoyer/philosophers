@@ -6,35 +6,38 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:14:54 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 10:11:23 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 10:01:19 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	get_pgrm_time(long long pgrm_start)
+long long	get_start(void)
 {
 	struct timeval	curent;
 	long long		c_time;
 
 	gettimeofday(&curent, NULL);
 	c_time = (curent.tv_sec * 1000) + (curent.tv_usec / 1000);
-	return (c_time - pgrm_start);
+	return (c_time);
 }
 
-long long	time_waccess(t_philo *philo)
+long long	get_pgrm_time(t_philo *philo)
 {
-	long long	time;
+	struct timeval	curent;
+	long long		c_time;
 
-	pthread_mutex_lock(&philo->simu->mutex_time);
-	time = get_pgrm_time(philo->simu->time_start);
-	pthread_mutex_unlock(&philo->simu->mutex_time);
-	return (time);
+	gettimeofday(&curent, NULL);
+	c_time = (curent.tv_sec * 1000) + (curent.tv_usec / 1000);
+	return (c_time - philo->simu->time_start);
 }
 
-void	reset_time(t_philo *philo, int add)
+int	ft_usleep(long long time_in_ms, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->simu->mutex_time);
-	philo->simu->time_start += add;
-	pthread_mutex_unlock(&philo->simu->mutex_time);
+	long long	start_time;
+
+	start_time = get_pgrm_time(philo);
+	while ((get_pgrm_time(philo) - start_time) < time_in_ms && !is_end(philo))
+		usleep(50);
+	return (0);
 }

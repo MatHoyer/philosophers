@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 10:57:11 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 11:22:57 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 13:29:08 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,16 @@
 
 typedef struct s_fork
 {
-	int				status;
 	pthread_mutex_t	fork;
-	pthread_mutex_t	access;
 }					t_fork;
 
 typedef struct s_simu
 {
 	pthread_mutex_t	mutex_stop;
-	pthread_mutex_t mutex_eat;
-	pthread_mutex_t	mutex_time;
+	pthread_mutex_t	mutex_print;
+	pthread_mutex_t	mutex_eat;
 	int				stop;
 	int				done_eating;
-	pthread_mutex_t	mutex_print;
 	int				number_of_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
@@ -65,21 +62,21 @@ int					ft_atoi(char *nptr);
 
 t_philo				*init(t_philo *philo, t_simu *simu_main, int ac, char **av);
 
-long long			get_pgrm_time(long long pgrm_start);
-long long			time_waccess(t_philo *philo);
-void				reset_time(t_philo *philo, int add);
+long long			get_start(void);
+long long			get_pgrm_time(t_philo *philo);
+int					ft_usleep(long long time_in_ms, t_philo *philo);
 
 void				print_state(t_philo *philo, char *state);
+void				print_death(t_philo *philo);
 
-int					create_thread(t_philo *philo, t_simu simu);
+int					create_thread(t_philo *philo, t_simu *simu);
 
 void				*ft_thread(void *arg);
 
-int					test_fork(t_philo *philo);
 int					set_fork(t_philo *philo);
 int					reset_fork(t_philo *philo);
+
 void				is_done_eating(t_philo *philo);
 int					is_end(t_philo *philo);
-void				is_die(t_philo *philo);
 
 #endif

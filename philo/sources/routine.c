@@ -6,7 +6,7 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:36:17 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 11:33:59 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 13:40:48 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,63 +16,43 @@ void	do_alone(t_philo *philo)
 {
 	print_state(philo, FORK);
 	usleep(philo->simu->time_to_die * 1000);
-	print_state(philo, DIE);
 }
 
 int	do_eat(t_philo *philo)
 {
-	long long	start;
-
+	if (is_end(philo))
+		return (1);
 	if (set_fork(philo))
 		return (1);
 	print_state(philo, FORK);
 	print_state(philo, FORK);
 	print_state(philo, EAT);
-	start = time_waccess(philo);
-	philo->last_eat = start;
-	while (time_waccess(philo)
-		- start < (long long)philo->simu->time_to_eat)
-	{
-		is_die(philo);
-		if (is_end(philo))
-		{
-			print_state(philo, DIE);
-			reset_fork(philo);
-			return (1);
-		}
-	}
+	pthread_mutex_lock(&philo->simu->mutex_stop);
+	philo->last_eat = get_pgrm_time(philo);
+	pthread_mutex_unlock(&philo->simu->mutex_stop);
+	if (ft_usleep(philo->simu->time_to_eat, philo))
+		return (reset_fork(philo), 1);
 	return (0);
 }
 
 int	do_sleep(t_philo *philo)
 {
-	long long	start;
-
+	if (is_end(philo))
+		return (reset_fork(philo), 1);
 	if (philo->nb_eat != -1)
 		philo->nb_eat++;
 	is_done_eating(philo);
 	if (reset_fork(philo))
 		return (1);
 	print_state(philo, SLEEP);
-	start = time_waccess(philo);
-	while (time_waccess(philo)
-		- start < (long long)philo->simu->time_to_sleep)
-	{
-		is_die(philo);
-		if (is_end(philo))
-		{
-			print_state(philo, DIE);
-			return (1);
-		}
-	}
+	if (ft_usleep(philo->simu->time_to_sleep, philo))
+		return (1);
 	return (0);
 }
 
 int	do_think(t_philo *philo)
 {
 	print_state(philo, THINK);
-	if (test_fork(philo))
-		return (1);
 	return (0);
 }
 
@@ -89,8 +69,7 @@ void	*ft_thread(void *arg)
 	{
 		if (do_eat(philo) || do_sleep(philo) || do_think(philo))
 			return (NULL);
-		usleep(1000);
-		reset_time(philo, 1);
+		usleep(20);
 	}
 	return (NULL);
 }

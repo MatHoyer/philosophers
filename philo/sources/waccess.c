@@ -6,21 +6,27 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:40:03 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 11:25:07 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 13:09:06 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	is_die(t_philo *philo)
+void	is_done_eating(t_philo *philo)
 {
-	if (time_waccess(philo)
-		- philo->last_eat > philo->simu->time_to_die)
+	if (philo->nb_eat >= philo->simu->end_if && philo->simu->end_if != -1)
 	{
-		pthread_mutex_lock(&philo->simu->mutex_stop);
-		if (philo->simu->stop == 0)
-			philo->simu->stop = philo->num;
-		pthread_mutex_unlock(&philo->simu->mutex_stop);
+		pthread_mutex_lock(&philo->simu->mutex_eat);
+		philo->simu->done_eating += 1;
+		philo->nb_eat = -1;
+		if (philo->simu->done_eating == philo->simu->number_of_philosophers)
+		{
+			pthread_mutex_lock(&philo->simu->mutex_stop);
+			if (philo->simu->stop == 0)
+				philo->simu->stop = philo->num;
+			pthread_mutex_unlock(&philo->simu->mutex_stop);	
+		}
+		pthread_mutex_unlock(&philo->simu->mutex_eat);
 	}
 }
 
@@ -32,59 +38,4 @@ int	is_end(t_philo *philo)
 	value = philo->simu->stop;
 	pthread_mutex_unlock(&philo->simu->mutex_stop);
 	return (value);
-}
-
-int	set_fork(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->his_fork.fork);
-	pthread_mutex_lock(&philo->his_fork.access);
-	philo->his_fork.status = 1;
-	pthread_mutex_unlock(&philo->his_fork.access);
-	is_die(philo);
-	if (is_end(philo))
-	{
-		print_state(philo, DIE);
-		pthread_mutex_unlock(&philo->his_fork.fork);
-		return (1);
-	}
-	pthread_mutex_lock(&philo->neighbour_fork->fork);
-	pthread_mutex_lock(&philo->neighbour_fork->access);
-	philo->neighbour_fork->status = 1;
-	pthread_mutex_unlock(&philo->neighbour_fork->access);
-	return (0);
-}
-
-int	reset_fork(t_philo *philo)
-{
-	pthread_mutex_unlock(&philo->neighbour_fork->fork);
-	pthread_mutex_lock(&philo->neighbour_fork->access);
-	philo->neighbour_fork->status = 0;
-	pthread_mutex_unlock(&philo->neighbour_fork->access);
-	pthread_mutex_unlock(&philo->his_fork.fork);
-	pthread_mutex_lock(&philo->his_fork.access);
-	philo->his_fork.status = 0;
-	pthread_mutex_unlock(&philo->his_fork.access);
-	return (0);
-}
-
-int	test_fork(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->his_fork.access);
-	pthread_mutex_lock(&philo->neighbour_fork->access);
-	while (philo->his_fork.status == 1 || philo->neighbour_fork->status == 1)
-	{
-		pthread_mutex_unlock(&philo->neighbour_fork->access);
-		pthread_mutex_unlock(&philo->his_fork.access);
-		is_die(philo);
-		if (is_end(philo))
-		{
-			print_state(philo, DIE);
-			return (1);
-		}
-		pthread_mutex_lock(&philo->his_fork.access);
-		pthread_mutex_lock(&philo->neighbour_fork->access);
-	}
-	pthread_mutex_unlock(&philo->neighbour_fork->access);
-	pthread_mutex_unlock(&philo->his_fork.access);
-	return (0);
 }

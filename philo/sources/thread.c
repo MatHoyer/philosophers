@@ -6,42 +6,50 @@
 /*   By: mhoyer <mhoyer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:30:45 by mhoyer            #+#    #+#             */
-/*   Updated: 2023/09/25 11:33:34 by mhoyer           ###   ########.fr       */
+/*   Updated: 2023/09/26 13:28:12 by mhoyer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	is_done_eating(t_philo *philo)
+void	monitor(t_philo *philo)
 {
-	if (philo->nb_eat >= philo->simu->end_if && philo->simu->end_if != -1)
+	int		i;
+
+	while (1)
 	{
-		pthread_mutex_lock(&philo->simu->mutex_eat);
-		philo->simu->done_eating += 1;
-		philo->nb_eat = -1;
-		if (philo->simu->done_eating == philo->simu->number_of_philosophers)
+		i = -1;
+		while (++i < philo[0].simu->number_of_philosophers)
 		{
-			pthread_mutex_lock(&philo->simu->mutex_stop);
-			if (philo->simu->stop == 0)
-				philo->simu->stop = philo->num;
-			pthread_mutex_unlock(&philo->simu->mutex_stop);	
+			pthread_mutex_lock(&philo[0].simu->mutex_stop);
+			if (get_pgrm_time(&philo[0])
+				- philo[i].last_eat > philo[0].simu->time_to_die)
+			{
+				philo[0].simu->stop = philo[i].num;
+				pthread_mutex_unlock(&philo[0].simu->mutex_stop);
+				print_death(philo);
+				return ;
+			}
+			pthread_mutex_unlock(&philo[0].simu->mutex_stop);
 		}
-		pthread_mutex_unlock(&philo->simu->mutex_eat);
+		usleep(20);
 	}
 }
 
-int	create_thread(t_philo *philo, t_simu simu)
+int	create_thread(t_philo *philo, t_simu *simu)
 {
 	int i;
 
 	i = -1;
-	while (++i < simu.number_of_philosophers)
+	simu->time_start = get_start();
+	while (++i < simu->number_of_philosophers)
 	{
 		if (pthread_create(&philo[i].thread, NULL, ft_thread, &philo[i]) != 0)
 			return (1);
 	}
+	monitor(philo);
 	i = -1;
-	while (++i < simu.number_of_philosophers)
+	while (++i < simu->number_of_philosophers)
 	{
 		if (pthread_join(philo[i].thread, NULL) != 0)
 			return (1);
